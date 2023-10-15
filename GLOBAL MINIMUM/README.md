@@ -23,7 +23,7 @@ Gradienty powyższych funkcji zostały podane w instrukcji zadania oraz są zawa
 
 Analiza uruchomienia algorytmu dla przykładowej wartości początkowej (x = 2): 
 
-![](Aspose.Words.721d9b7c-8a33-4244-8e81-76d03513465d.001.jpeg)
+![](img/fig_1.jpeg)
 
 *Fig.  1. Funkcja f(x) dla x=2.* 
 
@@ -67,7 +67,7 @@ Rozważmy, przypadek innej funkcji jednowymiarowej, w której mamy dwa minima:
 
 2( ) = 4 ∙ 3 − 8 ∙ + 1 
 
-![](Aspose.Words.721d9b7c-8a33-4244-8e81-76d03513465d.002.jpeg)
+![](img/fig_2.jpeg)
 
 *Fig.  2. Funkcja f2(x).* 
 
@@ -78,13 +78,13 @@ Omówienie algorytmu jest kontynuowane w punkcie 2. Funkcja dwuwymiarowa.
 
 2. **FUNKCJA DWUWYMIAROWA g(x)** 
 
-![](Aspose.Words.721d9b7c-8a33-4244-8e81-76d03513465d.003.jpeg)
+![](img/fig_3.jpeg)
 
 *Fig.  3. Źródło wykresów: wolframalpha.com* 
 
 Analiza uruchomienia algorytmu dla przykładowych wartości **(x1 = 1, x2 = 1)**: 
 
-![](Aspose.Words.721d9b7c-8a33-4244-8e81-76d03513465d.004.jpeg)
+![](img/fig_4.jpeg)
 
 *Fig.  4. Funkcja g(x) dla punktu początkowego (1,1).* 
 
@@ -114,7 +114,7 @@ x\_final:          (-0.02194210570455997, 0.012552612680346655) iterations:     
 
 Jednakże  teraz  pojawia  się  ryzyko,  że mnożąc  przez  zbyt  dużą wartość  „przeskoczymy”  właściwe rozwiązanie i algorytm będzie zbieżny do niewłaściwego punktu. Np. dla *learning\_rate = 1:* 
 
-![](Aspose.Words.721d9b7c-8a33-4244-8e81-76d03513465d.005.jpeg)
+![](img/fig_5.jpeg)
 
 *Fig.  5. Funkcja g(x) dla learning\_rate = 1.* 
 
@@ -125,7 +125,7 @@ Parametr *„max\_steps”* działa jako zabezpieczenie, by algorytm nie wykonyw
 
 Rozważmy inne przykładowe punkty początkowe dla funkcji g(x): **(x1 = 4, x2 = 4)** 
 
-![](Aspose.Words.721d9b7c-8a33-4244-8e81-76d03513465d.006.jpeg)
+![](img/fig_6.jpeg)
 
 *Fig.  6. Funkcja g(x) dla dalekiego punktu początkowego.* 
 
@@ -141,7 +141,7 @@ Funkcja g(x) posiada 2 znaczące minima, jednak poza nimi na płaszczyźnie X1-X
 
 Kolejnymi  ciekawymi  wartościami  początkowymi,  będą  punkty  w  okolicy  minimum  lokalnego, np. **(x1 = -2, x2 = 2)**. 
 
-![](Aspose.Words.721d9b7c-8a33-4244-8e81-76d03513465d.007.jpeg)
+![](img/fig_7.jpeg)
 
 *Fig.  7. Problem minimum lokalnego w funkcji g(x).* 
 
@@ -159,7 +159,7 @@ Wnioski oraz proponowane rozwiązanie wymienionych problemów zostało opisane w
 
 Warto dodać, że w opisywanym algorytmie zmiany kroków dla x1 i x2 są dokonywane równolegle  (w jednej pętli). W przypadku funkcji do minimum której spadek jest mniej więcej taki sam z każdej ze stron, nie stanowi to problemu. Jednak to rozwiązanie nie miałoby zastosowania przy trudniejszych funkcjach do testowania algorytmów optymalizacji, np. funkcji bananowej Rosenbrocka, która posiada wąskie paska minimów lokalnych. 
 
-![](Aspose.Words.721d9b7c-8a33-4244-8e81-76d03513465d.008.png)
+![](img/fig_8.png)
 
 *Fig.  8. Źródło wykresu: A. Eilmes, Metody numeryczne w chemii.* 
 

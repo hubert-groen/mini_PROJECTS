@@ -15,7 +15,7 @@ Gotowe drzewo jest poddawane ocenie dokładności w przywidywaniu etykiet klas n
 
 Zbyt duża głębokość drzewa ID3 owszem rozgrupuje dane ze zbioru uczącego w bardzo dokładny sposób, jednak dla nowych danych klasyfikator nie będzie już taki dokładny (a nawet bardzo zły). Takie zjawisko nazywamy przeuczeniem. Dlatego w tym podpunkcie wykorzystano zbiór walidacyjny by sprawdzać  dokładność  predykcji  klasyfikatora  na  nowych  danych,  na  wszystkich  możliwych głębokościach (jest ich tyle co etykiet w zbiorze). Jest to zobrazowane na Fig.1: 
 
-![](fig_1.jpeg)
+![](img/fig_1.jpeg)
 
 *Fig.  1. Dokładność predykcji a głębokość drzewa ID3.* 
 
@@ -23,7 +23,7 @@ Od pewnej głębokości (tutaj 5), dokładność predykcji na nowych danych znac
 
 Dla „najlepszej głębokości” uruchomiono predykcję dla zbioru testowego (20% wszystkich danych). 
 
-![](fig_2.png)
+![](img/fig_2.png)
 
 *Fig.  2. Dokładność predykcji dla zbioru testującego.* 
 
@@ -35,7 +35,7 @@ Implementację klasyfikatora ID3 można uznać za poprawną, ponieważ dla testo
 
 Warto  jednak  zauważyć,  że  dużą  rolę  odgrywa  tutaj  początkowa  dyskretyzacja  danych.  Niektóre atrybuty wejściowe (np. wzrost, cholesterol) mają duży zakres wartości, dlatego trzeba ustalić pewne wartości progowe i podzielić je na unikalne klasy. Jest to zrobione po części procentowo (co 20%)  i wybiórczo (możliwy zły podział z medycznego punktu widzenia). Zastosowanie innego podziału ma znaczący wpływ na strukturę drzewa ID3, a więc późniejszych przewidywań. 
 
-![](fig_3.jpeg)
+![](img/fig_3.jpeg)
 
 *Fig.  3. Dokładność predykcji vs głębokość dla innej dyskretyzacji.* 
 
