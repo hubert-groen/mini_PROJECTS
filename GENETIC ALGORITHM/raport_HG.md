@@ -25,7 +25,7 @@ oraz dość duże wartości:
 
 i uruchomiono algorytm 25 razy (powszechnie stosowana liczba). 
 
-![](fig_1.jpeg)
+![](img/fig_1.jpeg)
 
 *Fig.  1. Średnia skuteczność działania algorytmu generycznego dla 25 uruchomień* 
 
@@ -33,15 +33,15 @@ Na  Fig.  1,  że  wartość  funkcji  oceny  rośnie  wraz  iteracjami  –  po
 
 Przykładowe rezultaty dla początkowych iteracji: 
 
-![](fig_2.png)
+![](img/fig_2.png)
 
 *Fig.  2. Rzadki „improvement”* 
 
-![](fig_3.jpeg)
+![](img/fig_3.jpeg)
 
 *Fig.  3. Częsty „improvement”* 
 
-![](fig_4.png)
+![](img/fig_4.png)
 
 *Fig.  4. Szybkie wylosowanie elitarnego osobnika* 
 
@@ -64,7 +64,7 @@ Ze względu na długi czas symulacji (poprzedni podpunkt trwał około 4 minut),
 
 odpowiednio dla każdej wartości *pc* = {0.1, 0.25, 0.5, 0.75, 0.85}. 
 
-![](fig_5.jpeg)
+![](img/fig_5.jpeg)
 
 *Fig.  5. Skuteczność działania algorytmu generycznego dla różnych wartości pc* 
 
@@ -72,7 +72,7 @@ Dla powyższych danych (Fig. 5) oraz używanej funkcji celu, najlepsza wartość
 
 Dla  otrzymanego  prawdopodobieństwa  krzyżowania  (uznajmy  je  za  najlepsze)  przeprowadzono jeszcze raz optymalizację wartości oceny: 
 
-![](fig_6.jpeg)
+![](img/fig_6.jpeg)
 
 *Fig.  6. Liczba osobników = 400, iteracje = 500, pc = 0.75* 
 
@@ -84,11 +84,11 @@ Na wykresach Fig. 7 i Fig. 8 zostały dwukrotnie zwiększone: liczba iteracji = 
 
 Większa liczba iteracji w dla tego problemu nie zmieniła wiele. Jak już wcześniej zauważono, wartość rośnie  logarytmicznie,  a  zatem  po  ok.  300  iteracjach  nie  ma  już  wielkich  zmian.  Jednakże  przy początkowych uruchomieniach warto przetestować też większą ilość, ponieważ optimum może zostać odnalezione dopiero po długim czasie (Fig. 2). 
 
-![](fig_7.jpeg)
+![](img/fig_7.jpeg)
 
 *Fig.  7. Liczba osobników = 400, iteracje = 1000, pc = 0.75* 
 
-![](fig_8.jpeg)
+![](img/fig_8.jpeg)
 
 *Fig.  8. Liczba osobników = 800, iteracje = 500, pc = 0.75* 
 
@@ -96,7 +96,7 @@ Obliczenia z Fig.7 trwały: ***„Time taken: 2151.917777 seconds”**, c*zyli o
 
 Dwukrotnie większa liczba osobników nie zmieniła średniej wartości (ok. 35 metrów), jednak przez to że  daje  większe  szanse  na  wylosowanie  elitarnego  osobnika,  uruchomienie  algorytmu  z  liczbą osobników = 800 zwróciło najlepszą wartość podczas wszystkich prób w całym zadaniu: 
 
-![](fig_9.png)
+![](img/fig_9.png)
 
 *Fig.  9. Najlepsza wartość funkcji oceny podczas całego zadania.* 
 
