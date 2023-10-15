@@ -1,8 +1,4 @@
-﻿` `**WSTĘP DO SZTUCZNEJ INTELIGENCJI** 
-
-LABORATORIUM 3 – RAPORT 
-
-Student:  **Hubert Groen**   307866** Data:   **13.04.2023** 
+﻿# **Alpha-Beta algorithm for Six Mens Morris game**
 
 1. **ALGORYTM MINIMAX Z OBCINANIEM α – β** 
 

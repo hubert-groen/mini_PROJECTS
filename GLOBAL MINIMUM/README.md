@@ -1,18 +1,13 @@
-﻿**WSTĘP DO SZTUCZNEJ INTELIGENCJI** 
-
-LABORATORIUM 1 – RAPORT 
-
-Student:  **Hubert Groen**   307866** Data:   **16.03.2023** 
-
-**1.   OPIS ZADANIA** 
+﻿# **Approximating global minimum of 1D and 2D functions**
 
 Zadanie wymaga stworzenia algorytmu do poszukiwania minimum globalnego następujących funkcji: Funkcja jednowymiarowa: 
 
-( ) = + +** 
+$$f(x) = 2x^2 + 3x + 1$$
 
 Funkcja dwuwymiarowa: 
 
-( , ) = − . ∙ − − − . ∙ −( + . ) − ( − )
+$$g(x_1, x_2) = 1 - 0.6e^{-x_1^2 - x_2^2} - 0.4e^{-(x_1+1.75)^2 - (x_2-1)^2}$$
+
 
 Gradienty powyższych funkcji zostały podane w instrukcji zadania oraz są zawarte w kodzie. Kluczowe parametry algorytmu zostały opisane w punktach 2 oraz 3, są to: 
 
