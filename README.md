@@ -1,4 +1,4 @@
-# mini_PROJECTS
+# ML and DSA projects
 
 This repositiory contains several small projects in fielf of Machine Learning and Algorithms and Data Structures.
 
