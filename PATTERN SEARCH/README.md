@@ -1,3 +1,5 @@
-# title
+# **Comparison of pattern search algorithms: KMP, KP, naive**
 
-readme edit
+[See the results in the Notebook](report.ipynb)
+
+![](resources/plot.png)
