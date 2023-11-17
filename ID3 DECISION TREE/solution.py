@@ -26,6 +26,7 @@ def main():
 
     data_path = 'cardio_train.csv'
     klasa = 'cardio'
+    max_depth = 10
 
     solver = Medical_classifier(data_path, klasa)
     solver.manage_data()                              # dyskretyzacja i podział na zbiory: train, validate, test
@@ -33,7 +34,7 @@ def main():
 
     # WPŁYW GŁĘBOKOŚCI NA DOKŁADNOŚĆ PREDYKCJI
     # region
-    tree_depth = solver.max_tree_depth
+    tree_depth = solver.max_depth
 
     accuracies = {}
     best_validation_accuracy = 0

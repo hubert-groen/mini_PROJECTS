@@ -54,4 +54,17 @@ print(f"TEST ACCURACY = {round(test_accuracy, 2)} %")
 print('\n\nRANDOM SAMPLE TEST:')
 net.test_prediction(X_test, Y_test, np.random.randint(1, X_test.shape[0] - 1))
 
-# net.test_prediction(X_test, Y_test, 14)
+
+
+# TODO: POTESTOWAĆ JESZCZE TO:
+# import joblib
+
+# # Zakłada, że 'net' to Twoja zmienna zawierająca model sieci neuronowej
+# model_filename = 'moj_model.pkl'  # Nazwa pliku, w którym zostanie zapisany model
+# joblib.dump(net, model_filename)
+
+# # Odczytanie modelu z pliku
+# loaded_model = joblib.load(model_filename)
+
+# # Teraz możesz użyć 'loaded_model' do przewidywania na nowych danych
+# predicted_labels = loaded_model.predict(nowy_dataset)

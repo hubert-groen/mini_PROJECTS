@@ -7,17 +7,17 @@ class Medical_classifier():
 
     # PRZYGOTOWANIE DANYCH
 
-    def __init__(self, path, class_label, max_depth=4):
+    def __init__(self, path, class_label):
 
         self.data_file = pd.read_csv(path, delimiter=';').drop(columns='id')
         self.data_count = len(self.data_file)
 
-        self.max_tree_depth = self.data_file.shape[1] - 1                   # tyle ile klas
+        self.max_depth = self.data_file.shape[1] - 1                   # tyle ile klas
         # self.max_tree_depth = 5
 
         self.class_label = class_label
 
-        self.max_depth = max_depth
+        # self.max_depth = max_depth
 
     def manage_data(self):
 
