@@ -1,6 +1,6 @@
 # **Programowanie liniowe**
 
-Projekt miał na calu rozwiązanie trzech zadań z zakresu modelowania matematycznego. Pełna treść zadań znajduje się [tutaj](task.pdf).
+Projekt miał na calu rozwiązanie trzech zadań z zakresu modelowania matematycznego. Pełna treść zadań znajduje się [tutaj](task.pdf), natomiast formalny opis matematyczny oraz rozwiązania w [raporcie](report.pdf).
 
 1. **SIEĆ PRZEPŁYWOWA** 
 
