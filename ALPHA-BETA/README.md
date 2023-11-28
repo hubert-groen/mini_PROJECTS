@@ -2,7 +2,7 @@
 
 1. **ALGORYTM MINIMAX Z OBCINANIEM α – β** 
 
-Algorytm minimax pozwalana wyznaczanie wartości funkcji oceny dla poszczególnych stanów gry, wybiegając na *d* ruchów do przodu (głębokość). Algorytm działa rekursywnie aż do głębokości *d* lub znalezienia węzła terminalnego (koniec gry). Co drugą iterację preferowana jest maksymalna wartość funkcji oceny spośród dostępnych ruchów, a naprzemiennie jej minimalna wartość (symulowanie optymalnych ruchów przeciwnika. 
+Algorytm minimax pozwalana wyznaczanie wartości funkcji oceny dla poszczególnych stanów gry, wybiegając na *d* ruchów do przodu (głębokość). Algorytm działa rekursywnie aż do głębokości *d* lub znalezienia węzła terminalnego (koniec gry). Co drugą iterację preferowana jest maksymalna wartość funkcji oceny spośród dostępnych ruchów, a naprzemiennie jej minimalna wartość (symulowanie optymalnych ruchów przeciwnika). 
 
 Wersja algorytmu minimax z obcinaniem α – β, zapamiętuje ruch z najlepszą dotychczas pożądaną wartością (maksymalną / minimalną) i nie zagłębia się w ruchu, których przeciwnik i tak nie wykona (jeśli  gra  optymalnie),  ponieważ  są  dla  niego  niekorzystne.  Taka  metoda  pozwala  na  znaczne przyspieszenie, przeszukiwanie. W Tabeli 1 zaprezentowano czasy symulacji rozgrywki dla algorytmu minimax z i bez odcinania α – β (komentując linijki za to odpowiedzialne – Fig.1): 
 
