@@ -1,0 +1,25 @@
+set WYTWORNIE := W1 W2;
+set MAGAZYNY := M1 M2 M3;
+set SKLEPY := S1 S2 S3 S4;
+set PRODUKTY := P1 P2;
+
+# PARAMETRY
+
+param M = 9999;
+
+param produkcja:            W1   W2 :=
+                        P1  41   34
+                        P2  105  116;
+
+param zapotrzebowanie:      S1 S2 S3 S4 :=
+                        P1  18 12 15 16
+                        P2  38 46 53 51;
+                            
+param koszty_W_to_M:        M1 M2 M3 :=
+                        W1   5  2  4
+                        W2   7  4  5;
+
+param koszty_M_to_S:        S1 S2 S3 S4 :=
+                        M1  15  3  3  4
+                        M2   4 10  5  5
+                        M3   5  5  5 16;
