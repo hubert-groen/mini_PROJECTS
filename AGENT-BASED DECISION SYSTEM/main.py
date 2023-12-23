@@ -18,11 +18,11 @@ async def main():
     await ambulance_coordinator_agent.start(auto_register=True)
     # print("Coordinator started")
 
-    ambulance_1_agent = Ambulance("ambulance_1@localhost", "agent", 1, [5,5])
+    ambulance_1_agent = Ambulance("ambulance_1@localhost", "agent", 1, [10,10])
     await ambulance_1_agent.start(auto_register=True)
     # print("Ambulance 1 started")
 
-    ambulance_2_agent = Ambulance("ambulance_2@localhost", "agent", 2, [4,4])
+    ambulance_2_agent = Ambulance("ambulance_2@localhost", "agent", 2, [11,11])
     await ambulance_2_agent.start(auto_register=True)
     # print("Ambulance 2 started")
 

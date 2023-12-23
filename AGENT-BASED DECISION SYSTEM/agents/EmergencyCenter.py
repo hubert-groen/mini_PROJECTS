@@ -19,7 +19,7 @@ class EmergencyCenter(Agent):
         async def run(self):
 
             await asyncio.sleep(2)
-            print("\nWysyłanie złoszenia z Centrali...\n")
+            print("\nWysyłanie złoszenia 1 z Centrali...\n")
 
             event_msg = Message(to="ambulance_coordinator@localhost")
             event_msg.set_metadata("performative", "inform")
@@ -30,6 +30,21 @@ class EmergencyCenter(Agent):
             event_msg.body = json.dumps(self.agent.some_event_location)
 
             await self.send(event_msg)
+
+
+            await asyncio.sleep(2)
+            print("\nWysyłanie złoszenia 2 z Centrali...\n")
+
+            event_msg = Message(to="ambulance_coordinator@localhost")
+            event_msg.set_metadata("performative", "inform")
+            event_msg.set_metadata("ontologia", "traffic-coordination")
+            event_msg.set_metadata("language", "event-report")
+            event_msg.set_metadata("event_id", "2")
+
+            event_msg.body = json.dumps([0,1])
+
+            await self.send(event_msg)
+
 
     async def setup(self):
         self.add_behaviour(self.SendEvent())

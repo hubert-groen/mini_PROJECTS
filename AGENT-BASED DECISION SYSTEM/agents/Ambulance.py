@@ -29,7 +29,7 @@ class Ambulance(Agent):
 
             #     self.agent.accepted_task = True
 
-            path_msg = await self.receive()                                                    # timeout=10
+            path_msg = await self.receive()
             if path_msg and path_msg.get_metadata("language") == "optimal-route":
                 
                 optimal_path = json.loads(path_msg.body)
@@ -66,23 +66,7 @@ class Ambulance(Agent):
         async def run(self):
             for position in self.path:
                 self.agent.ambulance_position = position
-                # print(f"Ambulance position: {self.agent.ambulance_position}")
-                await asyncio.sleep(1)
-
-        # async def run(self):
-        #     direction = random.choice(["up", "down", "left", "right"])
-
-        #     if direction == "up" and self.agent.ambulance_position[0] > 0:
-        #         self.agent.ambulance_position[0] -= 2
-        #     elif direction == "down" and self.agent.ambulance_position[0] < 19:
-        #         self.agent.ambulance_position[0] += 2
-        #     elif direction == "left" and self.agent.ambulance_position[1] > 0:
-        #         self.agent.ambulance_position[1] -= 2
-        #     elif direction == "right" and self.agent.ambulance_position[1] < 19:
-        #         self.agent.ambulance_position[1] += 2
-
-        #     await asyncio.sleep(1)
-            
+                await asyncio.sleep(1)            
 
     async def setup(self):
         self.add_behaviour(self.NewTask())

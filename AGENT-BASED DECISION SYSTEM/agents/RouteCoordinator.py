@@ -13,15 +13,10 @@ class RouteCoordinator(Agent):
             if request_route_msg and request_route_msg.get_metadata("language") == "path-request":
                     
                     path_request_data = json.loads(request_route_msg.body)
-
-                    # @TODO Tutaj bedzie pobranie danych odnosnie zgloszenia - FIXME: zrobione!
-
                     print('route dostał prośbę')
                     print(path_request_data)
-                    print("---------------")
-
+                    print("--------------")
                     self.agent.add_behaviour(self.agent.SendOptimalRoute(path_request_data))
-                    # tutaj agent uruchamia wysyłanie trasy i wraca do nasłuchiwania
 
 
     class SendOptimalRoute(OneShotBehaviour):

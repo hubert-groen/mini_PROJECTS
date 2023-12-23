@@ -16,11 +16,11 @@ class AmbulanceCoordinator(Agent):
     def __init__(self, jid, password):
         super().__init__(jid, password)
 
-        self.ambulance_1_location = [5, 5]
-        self.ambulance_2_location = [4, 4]
+        self.ambulance_1_location = [10, 10]
+        self.ambulance_2_location = [11, 11]
 
-        self.event_1_location = False
-        self.event_2_location = False
+        self.event_1_location = None
+        self.event_2_location = None
 
         self.root = tk.Tk()
         self.root.title("Ambulance Map")
@@ -37,6 +37,8 @@ class AmbulanceCoordinator(Agent):
             super().__init__()
             self.ambulance_2_square = None
             self.ambulance_1_square = None
+            self.event_1_square = None
+            self.event_2_square = None
 
         async def run(self):
             self.update_map()
@@ -45,12 +47,21 @@ class AmbulanceCoordinator(Agent):
 
         def update_map(self):
             self.delete_all_squares()
+
             self.ambulance_1_square = self.draw_square(self.agent.ambulance_1_location, "red")
             self.ambulance_2_square = self.draw_square(self.agent.ambulance_2_location, "blue")
+
+            if self.agent.event_1_location is not None:
+                self.event_1_square = self.draw_square(self.agent.event_1_location, "green")
+
+            if self.agent.event_2_location is not None:
+                self.event_1_square = self.draw_square(self.agent.event_2_location, "yellow")
 
         def delete_all_squares(self):
             self.agent.canvas.delete(self.ambulance_1_square)
             self.agent.canvas.delete(self.ambulance_2_square)
+            self.agent.canvas.delete(self.event_1_square)
+            self.agent.canvas.delete(self.event_2_square)
 
         def draw_square(self, position, color):
             x, y = position
