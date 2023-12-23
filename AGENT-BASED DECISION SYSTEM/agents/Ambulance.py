@@ -1,5 +1,5 @@
 from spade.agent import Agent
-from spade.behaviour import CyclicBehaviour
+from spade.behaviour import OneShotBehaviour, CyclicBehaviour
 from spade.message import Message
 import json
 import asyncio
@@ -17,23 +17,29 @@ class Ambulance(Agent):
 
     class NewTask(CyclicBehaviour):
         async def run(self):
-            msg = await self.receive()
-            if msg and msg.get_metadata('language') == "event-request":
-                event_location = json.loads(msg.body)
+            # msg = await self.receive()
+            # if msg and msg.get_metadata('language') == "event-request":
+            #     event_location = json.loads(msg.body)
+            #     answer_msg = Message(to=f"ambulance_coordinator@localhost")
+            #     answer_msg.set_metadata("performative", "confirm")
+            #     answer_msg.set_metadata("ontologia", "traffic-coordination")
+            #     answer_msg.set_metadata("language", "request-answer")
+            #     answer_msg.body = json.dumps('yes')
+            #     await self.send(answer_msg)
 
-                answer_msg = Message(to=f"ambulance_coordinator@localhost")
-                answer_msg.set_metadata("performative", "confirm")
-                answer_msg.set_metadata("ontologia", "traffic-coordination")
-                answer_msg.set_metadata("language", "request-answer")
-                answer_msg.body = json.dumps('yes')
-                await self.send(answer_msg)
+            #     self.agent.accepted_task = True
 
-                self.agent.accepted_task = True
+            path_msg = await self.receive()                                                    # timeout=10
+            if path_msg and path_msg.get_metadata("language") == "optimal-route":
+                
+                optimal_path = json.loads(path_msg.body)
 
-                #TODO: path_msg = await self.receive()
+                print('karetka dostała trasę:')
+                print(optimal_path)
+                print("---------------")
 
                 print(f"Karetka {self.agent.ambulance_id} zaczyna jechać...")
-                self.agent.add_behaviour(self.agent.Drive())
+                self.agent.add_behaviour(self.agent.Drive(optimal_path))
 
 
 
@@ -52,20 +58,30 @@ class Ambulance(Agent):
             await asyncio.sleep(2)
 
 
-    class Drive(CyclicBehaviour):
+    class Drive(OneShotBehaviour):
+        def __init__(self, path):
+            super().__init__()
+            self.path = path
+
         async def run(self):
-            direction = random.choice(["up", "down", "left", "right"])
+            for position in self.path:
+                self.agent.ambulance_position = position
+                # print(f"Ambulance position: {self.agent.ambulance_position}")
+                await asyncio.sleep(1)
 
-            if direction == "up" and self.agent.ambulance_position[0] > 0:
-                self.agent.ambulance_position[0] -= 2
-            elif direction == "down" and self.agent.ambulance_position[0] < 19:
-                self.agent.ambulance_position[0] += 2
-            elif direction == "left" and self.agent.ambulance_position[1] > 0:
-                self.agent.ambulance_position[1] -= 2
-            elif direction == "right" and self.agent.ambulance_position[1] < 19:
-                self.agent.ambulance_position[1] += 2
+        # async def run(self):
+        #     direction = random.choice(["up", "down", "left", "right"])
 
-            await asyncio.sleep(1)
+        #     if direction == "up" and self.agent.ambulance_position[0] > 0:
+        #         self.agent.ambulance_position[0] -= 2
+        #     elif direction == "down" and self.agent.ambulance_position[0] < 19:
+        #         self.agent.ambulance_position[0] += 2
+        #     elif direction == "left" and self.agent.ambulance_position[1] > 0:
+        #         self.agent.ambulance_position[1] -= 2
+        #     elif direction == "right" and self.agent.ambulance_position[1] < 19:
+        #         self.agent.ambulance_position[1] += 2
+
+        #     await asyncio.sleep(1)
             
 
     async def setup(self):

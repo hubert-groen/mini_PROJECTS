@@ -73,17 +73,17 @@ class RouteCoordinator(Agent):
             route_msg = Message(to=recipient)
             route_msg.set_metadata("performative", "inform")
             route_msg.set_metadata("ontology", "traffic-coordination")
-            route_msg.set_metadata("language", "optimal_route")
-
-
+            route_msg.set_metadata("language", "optimal-route")
             print(f"path: {path}")
+            route_msg.body = json.dumps(path)
             await self.send(route_msg)
 
+
             # TODO: TUTAJ BĘDZIE
-            # - wysłanie trasy (body = path)
+            # - wysłanie trasy (body = path) do karetki - DONE
             # pobieranie GPS is przełączanie świateł + zakończenie zadania
 
-            self.agent.add_behaviour(self.agent.GetAmbulanceGPS())
+            # self.agent.add_behaviour(self.agent.GetAmbulanceGPS())
 
             # FIXME: wg mnie nie robimy nigdzie agent stop, ponieważ wtedy cały system padnie
             # await self.agent.stop()  # stop() czy return?

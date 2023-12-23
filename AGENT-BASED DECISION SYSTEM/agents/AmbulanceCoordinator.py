@@ -16,8 +16,8 @@ class AmbulanceCoordinator(Agent):
     def __init__(self, jid, password):
         super().__init__(jid, password)
 
-        self.ambulance_1_location = [9, 9]
-        self.ambulance_2_location = [10, 10]
+        self.ambulance_1_location = [5, 5]
+        self.ambulance_2_location = [4, 4]
 
         self.event_1_location = False
         self.event_2_location = False
@@ -145,7 +145,7 @@ class AmbulanceCoordinator(Agent):
             print(f"Ambulance 2 = {self.agent.ambulance_2_location}")
             print('\n')
 
-            await asyncio.sleep(1)
+            await asyncio.sleep(0.5)
 
     async def setup(self):
         self.add_behaviour(self.Map())
