@@ -75,40 +75,58 @@ class AmbulanceCoordinator(Agent):
                 return 2
 
         async def run(self):
-            event_msg = await self.receive()
+            get_event_msg = await self.receive()
 
-            if event_msg and event_msg.get_metadata('language') == "event-report":
-                event_location = json.loads(event_msg.body)
-                event_id = event_msg.get_metadata('event_id')
+            if get_event_msg and get_event_msg.get_metadata('language') == "event-report":
+                event_location = json.loads(get_event_msg.body)
+                event_id = get_event_msg.get_metadata('event_id')
                 location_variable = f"event_{event_id}_location"
                 setattr(self.agent, location_variable, event_location)                
                 closest_ambulance = self.find_closest_ambulance(event_location)
                 print('Koordynator dostał nowe zgłoszenie - najbliższa karetka: {}\n'.format(closest_ambulance))
 
-                # wysłanie wiadomości do karetki
-                request_msg = Message(to=f"ambulance_{closest_ambulance}@localhost")
-                request_msg.set_metadata("performative", "request")
-                request_msg.set_metadata("ontologia", "traffic-coordination")
-                request_msg.set_metadata("language", "event-request")
-                request_msg.body = json.dumps(event_location)
-                await self.send(request_msg)
+                request_route_msg = Message(to="route_coordinator@localhost")
+                request_route_msg.set_metadata("performative", "request")
+                request_route_msg.set_metadata("ontologia", "traffic-coordination")
+                request_route_msg.set_metadata("language", "path-request")
+
+                path_request_data = {
+                    "event_id": event_id,
+                    "ambulance_id": closest_ambulance,
+                    "ambulance_location": getattr(self.agent, f"ambulance_{closest_ambulance}_location"),
+                    "event_location": event_location
+                }
+
+                request_route_msg.body = json.dumps(path_request_data)
+                await self.send(request_route_msg)
+
+                # region
+                # # wysłanie wiadomości do karetki
+                # request_msg = Message(to=f"ambulance_{closest_ambulance}@localhost")
+                # request_msg.set_metadata("performative", "request")
+                # request_msg.set_metadata("ontologia", "traffic-coordination")
+                # request_msg.set_metadata("language", "event-request")
+                # request_msg.body = json.dumps(event_location)
+                # await self.send(request_msg)
             
-                # tutaj zmienić, że jak nie dostanę odp. to zamykam to i wysyłam do drugiej karetki
-                accept_msg = await self.receive()
+                # # tutaj zmienić, że jak nie dostanę odp. to zamykam to i wysyłam do drugiej karetki
+                # accept_msg = await self.receive()
 
-                if accept_msg and accept_msg.get_metadata('language') == 'request-answer':
+                # if accept_msg and accept_msg.get_metadata('language') == 'request-answer':
 
-                    answer = json.loads(accept_msg.body)
+                #     answer = json.loads(accept_msg.body)
 
-                    # wysłanie wiadomości do koordynatora przejazdu
-                    c_msg = Message(to=f"traffic_coordinator@localhost")      # FIXME: inna nazwa
-                    c_msg.set_metadata("performative", "request")
-                    c_msg.set_metadata("ontologia", "traffic-coordination")
-                    c_msg.set_metadata("language", "path-request")
-                    # FIXME: w body będzie id zdarzenia, id karetki, pozycja karetki, pozycja zdarzenia
-                    await self.send(c_msg)
+                #     # wysłanie wiadomości do koordynatora przejazdu
+                #     # c_msg = Message(to=f"traffic_coordinator@localhost")      # FIXME: inna nazwa
+                #     # c_msg.set_metadata("performative", "request")
+                #     # c_msg.set_metadata("ontologia", "traffic-coordination")
+                #     # c_msg.set_metadata("language", "path-request")
+                #     # # FIXME: w body będzie id zdarzenia, id karetki, pozycja karetki, pozycja zdarzenia
+                #     # await self.send(c_msg)
+                #     # print('wyslana prośba przejazdu')
+                # endregion
             
-    # to leci w tle - nie trzeba nic zmieniać
+
     class GetAmbulanceGPS(CyclicBehaviour):
         async def run(self):
             msg = await self.receive()
@@ -116,13 +134,8 @@ class AmbulanceCoordinator(Agent):
             if msg and msg.get_metadata("language") == "gps":
                 gps_data = json.loads(msg.body)
                 ambulance_id = msg.get_metadata('ambulance_id')
-
-                # print("\nReceived GPS data: {}   from Ambulance {}".format(gps_data, ambulance_id))
-
                 location_variable = f"ambulance_{ambulance_id}_location"
                 setattr(self.agent, location_variable, gps_data)
-
-            # await self.agent.stop()
 
     # to będzie do wyrzucenia, bo to tylko printuje pozycje które są na mapie
     class PrintData(CyclicBehaviour):

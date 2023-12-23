@@ -7,6 +7,9 @@ from agents.TrafficLightsCoordinator import TrafficLightCoordinator
 
 
 async def main():
+
+    print('\n')
+
     emergency_center_agent = EmergencyCenter("emergency_center@localhost", "agent")
     await emergency_center_agent.start(auto_register=True)
     # print("Emergency Center started")
@@ -23,8 +26,8 @@ async def main():
     await ambulance_2_agent.start(auto_register=True)
     # print("Ambulance 2 started")
 
-    # route_coordinator_agent = RouteCoordinator("route_coordinator@localhost", "agent")
-    # await route_coordinator_agent.start(auto_register=True)
+    route_coordinator_agent = RouteCoordinator("route_coordinator@localhost", "agent")
+    await route_coordinator_agent.start(auto_register=True)
     # print("Route Coordinator started")
 
     # traffic_light_coordinator = TrafficLightCoordinator("traffic_light_coordinator@localhost", "agent")

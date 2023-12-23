@@ -17,9 +17,7 @@ class Ambulance(Agent):
 
     class NewTask(CyclicBehaviour):
         async def run(self):
-
             msg = await self.receive()
-
             if msg and msg.get_metadata('language') == "event-request":
                 event_location = json.loads(msg.body)
 

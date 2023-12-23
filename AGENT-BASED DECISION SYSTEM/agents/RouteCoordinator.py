@@ -2,32 +2,44 @@ from spade.agent import Agent
 from spade.behaviour import OneShotBehaviour, CyclicBehaviour
 from spade.message import Message
 from queue import Queue
+import json
 
 
 class RouteCoordinator(Agent):
-    call_id = 0
-    destination_x = 0
-    destination_y = 0
-    last_x = 0
-    lats_y = 0
-    ambulance_id = 0
 
-    async def setup(self):
-        self.add_behaviour(self.GetRouteRequest())
-
-    class GetRouteRequest(OneShotBehaviour):
+    class GetRouteRequest(CyclicBehaviour):
         async def run(self):
-            msg = await self.receive(timeout=3)
-            if msg:
-                if msg.metadata["language"] == "optimal_route":
-                    # @TODO Tutaj bedzie pobranie danych odnosnie zgloszenia
-                    agent = self.agent.add_behaviour(self.agent.SendOptimalRoute())
-                else:
-                    print("Otrzymano nieoczekiwana wiadomosc.")
+            request_route_msg = await self.receive()                                                    # timeout=10
+            if request_route_msg and request_route_msg.get_metadata("language") == "path-request":
+                    
+                    path_request_data = json.loads(request_route_msg.body)
 
-            await self.agent.stop()
+                    # @TODO Tutaj bedzie pobranie danych odnosnie zgloszenia - FIXME: zrobione!
+
+                    print('route dostał prośbę')
+                    print(path_request_data)
+                    print("---------------")
+
+                    self.agent.add_behaviour(self.agent.SendOptimalRoute(path_request_data))
+                    # tutaj agent uruchamia wysyłanie trasy i wraca do nasłuchiwania
+
 
     class SendOptimalRoute(OneShotBehaviour):
+        def __init__(self, path_request_data):
+            super().__init__()
+            self.path_request_data = path_request_data
+            self.event_id = path_request_data.get("event_id")
+            self.ambulance_id = path_request_data.get("ambulance_id")
+
+            event_location = path_request_data.get("event_location")
+            self.destination_x = event_location[0]
+            self.destination_y = event_location[1]
+
+            ambulance_location = path_request_data.get("ambulance_location")
+            self.start_x = ambulance_location[0]
+            self.start_y = ambulance_location[1]
+
+
         def is_valid(self, x, y):
             return 0 <= x < 20 and 0 <= y < 20
 
@@ -56,21 +68,26 @@ class RouteCoordinator(Agent):
             return None
 
         async def run(self):
-            path = self.find_path((self.agent.last_x, self.agent.last_y),
-                                  (self.agent.destination_x, self.agent.destination_y))
-            recipient = "ambulance_" + self.agent.ambulance_id + "@localhost"
-            route_msg = Message(
-                to=recipient)
+            path = self.find_path((self.start_x, self.start_y), (self.destination_x, self.destination_y))
+            recipient = "ambulance_" + str(self.ambulance_id) + "@localhost"
+            route_msg = Message(to=recipient)
             route_msg.set_metadata("performative", "inform")
             route_msg.set_metadata("ontology", "traffic-coordination")
             route_msg.set_metadata("language", "optimal_route")
-            route_msg.body = path
+
+
+            print(f"path: {path}")
             await self.send(route_msg)
+
+            # TODO: TUTAJ BĘDZIE
+            # - wysłanie trasy (body = path)
+            # pobieranie GPS is przełączanie świateł + zakończenie zadania
 
             self.agent.add_behaviour(self.agent.GetAmbulanceGPS())
 
-            await self.agent.stop()  # stop() czy return?
-            return  # j.w.
+            # FIXME: wg mnie nie robimy nigdzie agent stop, ponieważ wtedy cały system padnie
+            # await self.agent.stop()  # stop() czy return?
+            # return  # j.w.
 
     class GetAmbulanceGPS(CyclicBehaviour):
         async def run(self):
@@ -112,3 +129,7 @@ class RouteCoordinator(Agent):
             traffic_lights_msg.set_metadata("language", "change_lights")
             traffic_lights_msg.body = (self.agent.last_x, self.agent.last_y)
             await self.send(traffic_lights_msg)
+
+
+    async def setup(self):
+        self.add_behaviour(self.GetRouteRequest())
