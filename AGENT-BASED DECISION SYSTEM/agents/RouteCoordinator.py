@@ -7,9 +7,13 @@ import json
 
 class RouteCoordinator(Agent):
 
+    # otrzymanie prośby wyznaczenia najlepszej trasy
     class GetRouteRequest(CyclicBehaviour):
+        '''
+        otrzymanie prośby wyznaczenia najlepszej trasy od koordynatora karetek
+        '''
         async def run(self):
-            request_route_msg = await self.receive()                                                    # timeout=10
+            request_route_msg = await self.receive()
             if request_route_msg and request_route_msg.get_metadata("language") == "path-request":
                     
                     path_request_data = json.loads(request_route_msg.body)
@@ -18,8 +22,15 @@ class RouteCoordinator(Agent):
                     print("--------------")
                     self.agent.add_behaviour(self.agent.SendOptimalRoute(path_request_data))
 
-
+    # znalezienie najlepszej trasy
+    # wysłanie jej do karetki
+    #
     class SendOptimalRoute(OneShotBehaviour):
+        '''
+        - znalezienie najlepszej trasy
+        - wysłanie jej do karetki
+        
+        '''
         def __init__(self, path_request_data):
             super().__init__()
             self.path_request_data = path_request_data

@@ -16,22 +16,46 @@ class Ambulance(Agent):
         self.destination_path = False
 
     class NewTask(CyclicBehaviour):
+        '''
+        1. oczekiwanie na otrzymanie zgłoszenia (od koordynatora karetek)
+        2. odpowiedź potwierdzająca przyjęcie zgłoszenia (do koordynatora karetek)
+        3. uruchomienie zachowania GetRoute (oczekiwanie na trasę przejazdu)
+        '''
         async def run(self):
-            # msg = await self.receive()
-            # if msg and msg.get_metadata('language') == "event-request":
-            #     event_location = json.loads(msg.body)
-            #     answer_msg = Message(to=f"ambulance_coordinator@localhost")
-            #     answer_msg.set_metadata("performative", "confirm")
-            #     answer_msg.set_metadata("ontologia", "traffic-coordination")
-            #     answer_msg.set_metadata("language", "request-answer")
-            #     answer_msg.body = json.dumps('yes')
-            #     await self.send(answer_msg)
 
-            #     self.agent.accepted_task = True
+            # 1
+            request_msg = await self.receive()
+            if request_msg and request_msg.get_metadata('language') == 'event-request':
+                event_location = json.loads(request_msg.body)
+                print('karetka otrzymuje request')
 
+                # 2
+                answer_msg = Message(to=f"ambulance_coordinator@localhost")
+                answer_msg.set_metadata("performative", "confirm")
+                answer_msg.set_metadata("ontologia", "traffic-coordination")
+                answer_msg.set_metadata("language", "request-answer")
+                answer_msg.body = json.dumps('yes')
+                await self.send(answer_msg)
+                print('karetka odpowiada yes')
+
+                # 3
+                self.agent.add_behaviour(self.agent.GetRoute())
+
+
+    class GetRoute(CyclicBehaviour):
+        '''
+        1. oczekiwanie na otrzymanie trasy przejazdu (od koordynatora przejazdu)
+        2. uruchomienie zachowania Drive
+        '''
+        def __init__(self):
+            super().__init__()
+
+        async def run(self):
+
+            # 1
             path_msg = await self.receive()
             if path_msg and path_msg.get_metadata("language") == "optimal-route":
-                
+            
                 optimal_path = json.loads(path_msg.body)
 
                 print('karetka dostała trasę:')
@@ -39,12 +63,15 @@ class Ambulance(Agent):
                 print("---------------")
 
                 print(f"Karetka {self.agent.ambulance_id} zaczyna jechać...")
+
+                # 2
                 self.agent.add_behaviour(self.agent.Drive(optimal_path))
 
 
-
-    # update w tle cały czas - nie trzeba nic zmieniać
     class SendGPS(CyclicBehaviour):
+        '''
+        przesyłanie aktualnego GPS karetki - działa cały czas w tle
+        '''
         async def run(self):
             msg = Message(to="ambulance_coordinator@localhost")
             msg.set_metadata("performative", "inform")
@@ -59,14 +86,21 @@ class Ambulance(Agent):
 
 
     class Drive(OneShotBehaviour):
+        '''
+        symulacja jazdy karetki - zmiana GPS punkt po punkcie, według wyznaczonej trasy
+        '''
         def __init__(self, path):
             super().__init__()
             self.path = path
 
         async def run(self):
+            print('karetka zaczyna jechać')
             for position in self.path:
                 self.agent.ambulance_position = position
-                await asyncio.sleep(1)            
+                await asyncio.sleep(2)         
+
+            # TODO: tutaj trzeba dodać że zakończone i przesłać jakiś komunikat   
+
 
     async def setup(self):
         self.add_behaviour(self.NewTask())

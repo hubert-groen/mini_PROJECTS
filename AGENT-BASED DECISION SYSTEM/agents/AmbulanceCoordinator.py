@@ -70,7 +70,13 @@ class AmbulanceCoordinator(Agent):
             return self.agent.canvas.create_rectangle(x_pixel, y_pixel, x_pixel + SQUARE_SIZE, y_pixel + SQUARE_SIZE, fill=color)
 
     
-    class ManageEvent(CyclicBehaviour):
+    class GetEvent(CyclicBehaviour):
+        '''
+        1. oczekiwanie na otrzymanie zgłoszenia (z centrali)
+        2. wybranie najbliższej karetki (na podstawie danych GPS)
+        3. wysłanie requestu do konkretnej karetki
+        4. uruchomienie zachowania GetRequestFromAmbulance
+        '''
 
             # tutaj trzeba też będzie sprawdzić czy są zajęte
         def find_closest_ambulance(self, event_location):
@@ -86,59 +92,78 @@ class AmbulanceCoordinator(Agent):
                 return 2
 
         async def run(self):
-            get_event_msg = await self.receive()
 
+            # 1
+            get_event_msg = await self.receive()
             if get_event_msg and get_event_msg.get_metadata('language') == "event-report":
                 event_location = json.loads(get_event_msg.body)
                 event_id = get_event_msg.get_metadata('event_id')
                 location_variable = f"event_{event_id}_location"
-                setattr(self.agent, location_variable, event_location)                
+                setattr(self.agent, location_variable, event_location)
+
+                # 2               
                 closest_ambulance = self.find_closest_ambulance(event_location)
                 print('Koordynator dostał nowe zgłoszenie - najbliższa karetka: {}\n'.format(closest_ambulance))
 
+                # 3
+                request_amb_msg = Message(to=f"ambulance_{closest_ambulance}@localhost")
+                request_amb_msg.set_metadata("performative", "request")
+                request_amb_msg.set_metadata("ontologia", "traffic-coordination")
+                request_amb_msg.set_metadata("language", "event-request")
+                request_amb_msg.body = json.dumps(event_location)
+                print('wysłanie prośby do karetki')
+                await self.send(request_amb_msg)
+
+                # 4
+                self.agent.add_behaviour(self.agent.GetRequestFromAmbulance(event_id, event_location, closest_ambulance))
+
+
+
+    class GetRequestFromAmbulance(CyclicBehaviour):
+        '''
+        1. oczekiwanie na odpowiedź akceptacji zgłoszenia od karetki
+        2. request do koordynatora przejazdu o wyznaczenie najlepszej trasy
+        3. 
+        '''
+        def __init__(self, event_id, event_location, closest_ambulance):
+            super().__init__()
+            self.event_id = event_id
+            self.event_location = event_location
+            self.ambulance_id = closest_ambulance
+        
+        async def run(self):
+
+            # 1
+            answer_amb_msg = await self.receive()
+            if answer_amb_msg and answer_amb_msg.get_metadata('language') == 'request-answer':
+                answer = json.loads(answer_amb_msg.body)                    # narazie zakładamy, że odpowiedź to zawsze 'yes'
+                print(f'koordynator dostał odp. od karetki: {answer}')
+
+                # 2
                 request_route_msg = Message(to="route_coordinator@localhost")
                 request_route_msg.set_metadata("performative", "request")
                 request_route_msg.set_metadata("ontologia", "traffic-coordination")
                 request_route_msg.set_metadata("language", "path-request")
 
                 path_request_data = {
-                    "event_id": event_id,
-                    "ambulance_id": closest_ambulance,
-                    "ambulance_location": getattr(self.agent, f"ambulance_{closest_ambulance}_location"),
-                    "event_location": event_location
+                    "event_id": self.event_id,
+                    "ambulance_id": self.ambulance_id,
+                    "ambulance_location": getattr(self.agent, f"ambulance_{self.ambulance_id}_location"),
+                    "event_location": self.event_location
                 }
 
                 request_route_msg.body = json.dumps(path_request_data)
                 await self.send(request_route_msg)
 
-                # region
-                # # wysłanie wiadomości do karetki
-                # request_msg = Message(to=f"ambulance_{closest_ambulance}@localhost")
-                # request_msg.set_metadata("performative", "request")
-                # request_msg.set_metadata("ontologia", "traffic-coordination")
-                # request_msg.set_metadata("language", "event-request")
-                # request_msg.body = json.dumps(event_location)
-                # await self.send(request_msg)
-            
-                # # tutaj zmienić, że jak nie dostanę odp. to zamykam to i wysyłam do drugiej karetki
-                # accept_msg = await self.receive()
+                # 3
+                # TODO: tutaj uruchomienie zachowania - przesyłania aktualnego GPS danej karetki do RouteCoordinator
 
-                # if accept_msg and accept_msg.get_metadata('language') == 'request-answer':
 
-                #     answer = json.loads(accept_msg.body)
-
-                #     # wysłanie wiadomości do koordynatora przejazdu
-                #     # c_msg = Message(to=f"traffic_coordinator@localhost")      # FIXME: inna nazwa
-                #     # c_msg.set_metadata("performative", "request")
-                #     # c_msg.set_metadata("ontologia", "traffic-coordination")
-                #     # c_msg.set_metadata("language", "path-request")
-                #     # # FIXME: w body będzie id zdarzenia, id karetki, pozycja karetki, pozycja zdarzenia
-                #     # await self.send(c_msg)
-                #     # print('wyslana prośba przejazdu')
-                # endregion
-            
 
     class GetAmbulanceGPS(CyclicBehaviour):
+        '''
+        odbieranie aktualnego GPS karetki - działa cały czas w tle
+        '''
         async def run(self):
             msg = await self.receive()
 
@@ -148,18 +173,21 @@ class AmbulanceCoordinator(Agent):
                 location_variable = f"ambulance_{ambulance_id}_location"
                 setattr(self.agent, location_variable, gps_data)
 
-    # to będzie do wyrzucenia, bo to tylko printuje pozycje które są na mapie
     class PrintData(CyclicBehaviour):
+        '''
+        funkcja pomocnicza do wyświetlania pozycji GPS w terminalu
+        '''
         async def run(self):
 
             print(f"Ambulance 1 = {self.agent.ambulance_1_location}")
             print(f"Ambulance 2 = {self.agent.ambulance_2_location}")
             print('\n')
 
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(1)
+
 
     async def setup(self):
         self.add_behaviour(self.Map())
+        self.add_behaviour(self.GetEvent())
         self.add_behaviour(self.GetAmbulanceGPS())
-        self.add_behaviour(self.ManageEvent())
         self.add_behaviour(self.PrintData())
