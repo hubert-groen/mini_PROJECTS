@@ -21,4 +21,4 @@ class TrafficLightCoordinator(Agent):
                         print( f"Karetka {ambulance_id} prosi o zmiane swiateł w lokalizacji {gps_data} jednak nie ma tam świateł :c")
 
     async def setup(self):
-        self.add_behaviour(self.GetAmbulanceGPS())
+        self.add_behaviour(self.GetChangeLightRequest())

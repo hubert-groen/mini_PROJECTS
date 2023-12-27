@@ -30,8 +30,8 @@ async def main():
     await route_coordinator_agent.start(auto_register=True)
     # print("Route Coordinator started")
 
-    # traffic_light_coordinator = TrafficLightCoordinator("traffic_light_coordinator@localhost", "agent")
-    # await traffic_light_coordinator.start(auto_register=True)
+    traffic_light_coordinator = TrafficLightCoordinator("traffic_light_coordinator@localhost", "agent")
+    await traffic_light_coordinator.start(auto_register=True)
     # print("Traffic light coordinator started") 
 
 

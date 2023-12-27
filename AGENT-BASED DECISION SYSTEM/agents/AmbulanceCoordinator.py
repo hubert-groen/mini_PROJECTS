@@ -123,7 +123,7 @@ class AmbulanceCoordinator(Agent):
         '''
         1. oczekiwanie na odpowiedź akceptacji zgłoszenia od karetki
         2. request do koordynatora przejazdu o wyznaczenie najlepszej trasy
-        3. 
+        3. uruchomienie zachowania UpdateRideProgress
         '''
         def __init__(self, event_id, event_location, closest_ambulance):
             super().__init__()
@@ -156,7 +156,36 @@ class AmbulanceCoordinator(Agent):
                 await self.send(request_route_msg)
 
                 # 3
-                # TODO: tutaj uruchomienie zachowania - przesyłania aktualnego GPS danej karetki do RouteCoordinator
+                self.agent.add_behaviour(self.agent.UpdateRideProgress(path_request_data["ambulance_id"]))
+
+
+    class UpdateRideProgress(CyclicBehaviour):
+        '''
+        przesyłanie aktualnego GPS karetki (do koordynatora przejazdu)
+        '''
+        def __init__(self, ambulance_id):
+            super().__init__()
+            self.ambulance_id = ambulance_id
+
+        async def run(self):
+
+            update_ride_msg = Message(to="route_coordinator@localhost")
+            update_ride_msg.set_metadata("performative", "inform")
+            update_ride_msg.set_metadata("ontologia", "traffic-coordination")
+            update_ride_msg.set_metadata("language", "gps-progress")
+            update_ride_msg.set_metadata("ambulance_id", f"{self.ambulance_id}")
+
+
+            location_variable = f"self.agent.ambulance_{self.ambulance_id}_location"
+            update_ride_msg.body = json.dumps(location_variable)
+
+
+            # TODO: tutaj będzie dodane że jeśli karetka dojechała to będzie zakończenie przejazdu
+
+            
+            await self.send(update_ride_msg)
+            await asyncio.sleep(2)
+
 
 
 

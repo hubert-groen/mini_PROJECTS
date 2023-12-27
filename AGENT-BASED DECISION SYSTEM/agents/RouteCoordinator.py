@@ -7,12 +7,14 @@ import json
 
 class RouteCoordinator(Agent):
 
-    # otrzymanie prośby wyznaczenia najlepszej trasy
     class GetRouteRequest(CyclicBehaviour):
         '''
-        otrzymanie prośby wyznaczenia najlepszej trasy od koordynatora karetek
+        1. oczekiwanie na prośbę wyznaczenia najlepszej trasy (od koordynatora karetek)
+        2. uruchomienie zachowania SendOprimalRoute
         '''
         async def run(self):
+
+            # 1
             request_route_msg = await self.receive()
             if request_route_msg and request_route_msg.get_metadata("language") == "path-request":
                     
@@ -20,16 +22,15 @@ class RouteCoordinator(Agent):
                     print('route dostał prośbę')
                     print(path_request_data)
                     print("--------------")
+
+                    # 2
                     self.agent.add_behaviour(self.agent.SendOptimalRoute(path_request_data))
 
-    # znalezienie najlepszej trasy
-    # wysłanie jej do karetki
-    #
+
     class SendOptimalRoute(OneShotBehaviour):
         '''
-        - znalezienie najlepszej trasy
-        - wysłanie jej do karetki
-        
+        1. znalezienie najlepszej trasy
+        2. wysłanie jej do karetki
         '''
         def __init__(self, path_request_data):
             super().__init__()
@@ -44,7 +45,6 @@ class RouteCoordinator(Agent):
             ambulance_location = path_request_data.get("ambulance_location")
             self.start_x = ambulance_location[0]
             self.start_y = ambulance_location[1]
-
 
         def is_valid(self, x, y):
             return 0 <= x < 20 and 0 <= y < 20
@@ -74,7 +74,11 @@ class RouteCoordinator(Agent):
             return None
 
         async def run(self):
+            
+            # 1
             path = self.find_path((self.start_x, self.start_y), (self.destination_x, self.destination_y))
+
+            # 2
             recipient = "ambulance_" + str(self.ambulance_id) + "@localhost"
             route_msg = Message(to=recipient)
             route_msg.set_metadata("performative", "inform")
@@ -84,22 +88,20 @@ class RouteCoordinator(Agent):
             route_msg.body = json.dumps(path)
             await self.send(route_msg)
 
+            self.agent.add_behaviour(self.agent.GetAmbulanceGPS())
 
-            # TODO: TUTAJ BĘDZIE
-            # - wysłanie trasy (body = path) do karetki - DONE
-            # pobieranie GPS is przełączanie świateł + zakończenie zadania
 
-            # self.agent.add_behaviour(self.agent.GetAmbulanceGPS())
-
-            # FIXME: wg mnie nie robimy nigdzie agent stop, ponieważ wtedy cały system padnie
-            # await self.agent.stop()  # stop() czy return?
-            # return  # j.w.
 
     class GetAmbulanceGPS(CyclicBehaviour):
+        '''
+        1. oczekiwanie na aktualną pozycję karetki (od koordynatora karetek)
+        2. wysłanie requestu zmiany świateł (do koordynatora przejazdu)
+        '''
         async def run(self):
-            msg = await self.receive(timeout=3)
-            if msg:
-                if msg.metadata["language"] == "gps_progress":
+
+            # 1
+            msg = await self.receive()
+            if msg and msg.metadata["language"] == "gps-progress":
                     current_x = msg.body[0]
                     current_y = msg.body[1]
                     print("Received GPS data: {}".format(current_x + ", " + current_y))
