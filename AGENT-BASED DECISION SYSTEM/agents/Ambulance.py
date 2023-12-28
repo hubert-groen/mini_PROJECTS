@@ -3,7 +3,6 @@ from spade.behaviour import OneShotBehaviour, CyclicBehaviour
 from spade.message import Message
 import json
 import asyncio
-import random
 
 class Ambulance(Agent):
     def __init__(self, jid, password, ambulance_id, initial_position):
@@ -27,7 +26,6 @@ class Ambulance(Agent):
             request_msg = await self.receive()
             if request_msg and request_msg.get_metadata('language') == 'event-request':
                 event_location = json.loads(request_msg.body)
-                print('karetka otrzymuje request')
 
                 # 2
                 answer_msg = Message(to=f"ambulance_coordinator@localhost")
@@ -36,11 +34,9 @@ class Ambulance(Agent):
                 answer_msg.set_metadata("language", "request-answer")
                 answer_msg.body = json.dumps('yes')
                 await self.send(answer_msg)
-                print('karetka odpowiada yes')
 
                 # 3
                 self.agent.add_behaviour(self.agent.GetRoute())
-
 
     class GetRoute(CyclicBehaviour):
         '''
@@ -58,16 +54,11 @@ class Ambulance(Agent):
             
                 optimal_path = json.loads(path_msg.body)
 
-                print('karetka dostała trasę:')
-                print(optimal_path)
-                print("---------------")
-
-                print(f"Karetka {self.agent.ambulance_id} zaczyna jechać...")
+                print(f"Karetka {self.agent.ambulance_id} otrzymała trasę i zaczyna jechać.\n")
 
                 # 2
                 self.agent.add_behaviour(self.agent.Drive(optimal_path))
                 self.kill()
-
 
     class SendGPS(CyclicBehaviour):
         '''
@@ -85,7 +76,6 @@ class Ambulance(Agent):
             await self.send(msg)
             await asyncio.sleep(2)
 
-
     class Drive(OneShotBehaviour):
         '''
         symulacja jazdy karetki - zmiana GPS punkt po punkcie, według wyznaczonej trasy
@@ -95,15 +85,11 @@ class Ambulance(Agent):
             self.path = path
 
         async def run(self):
-            print('karetka mówi że zaczyna jechać')
             for position in self.path:
                 self.agent.ambulance_position = position
                 await asyncio.sleep(2)         
 
-            print('karetka mówi że dojechała')
             self.kill()
-
-
 
     async def setup(self):
         self.add_behaviour(self.NewTask())

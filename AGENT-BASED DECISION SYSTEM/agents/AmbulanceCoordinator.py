@@ -69,7 +69,6 @@ class AmbulanceCoordinator(Agent):
             y_pixel = y * SQUARE_SIZE
             return self.agent.canvas.create_rectangle(x_pixel, y_pixel, x_pixel + SQUARE_SIZE, y_pixel + SQUARE_SIZE, fill=color)
 
-    
     class GetEvent(CyclicBehaviour):
         '''
         1. oczekiwanie na otrzymanie zgłoszenia (z centrali)
@@ -111,12 +110,10 @@ class AmbulanceCoordinator(Agent):
                 request_amb_msg.set_metadata("ontologia", "traffic-coordination")
                 request_amb_msg.set_metadata("language", "event-request")
                 request_amb_msg.body = json.dumps(event_location)
-                print('wysłanie prośby do karetki')
                 await self.send(request_amb_msg)
 
                 # 4
                 self.agent.add_behaviour(self.agent.GetRequestFromAmbulance(event_id, event_location, closest_ambulance))
-
 
     class GetRequestFromAmbulance(CyclicBehaviour):
         '''
@@ -136,7 +133,6 @@ class AmbulanceCoordinator(Agent):
             answer_amb_msg = await self.receive()
             if answer_amb_msg and answer_amb_msg.get_metadata('language') == 'request-answer':
                 answer = json.loads(answer_amb_msg.body)                    # narazie zakładamy, że odpowiedź to zawsze 'yes'
-                print(f'koordynator dostał odp. od karetki: {answer}')
 
                 # 2
                 request_route_msg = Message(to="route_coordinator@localhost")
@@ -157,7 +153,6 @@ class AmbulanceCoordinator(Agent):
                 # 3
                 self.agent.add_behaviour(self.agent.UpdateRideProgress(self.ambulance_id, self. event_id, self.event_location))
                 self.kill()
-
 
     class UpdateRideProgress(CyclicBehaviour):
         '''
@@ -230,7 +225,6 @@ class AmbulanceCoordinator(Agent):
             print('\n')
 
             await asyncio.sleep(1)
-
 
     async def setup(self):
         self.add_behaviour(self.Map())

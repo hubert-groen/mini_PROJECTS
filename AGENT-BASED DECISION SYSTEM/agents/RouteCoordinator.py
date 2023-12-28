@@ -19,13 +19,9 @@ class RouteCoordinator(Agent):
             if request_route_msg and request_route_msg.get_metadata("language") == "path-request":
 
                     path_request_data = json.loads(request_route_msg.body)
-                    print('Koordynator przejazdu dostał prośbę')
-                    print(path_request_data)
-                    print("--------------")
 
                     # 2
                     self.agent.add_behaviour(self.agent.SendOptimalRoute(path_request_data))
-
 
     class SendOptimalRoute(OneShotBehaviour):
         '''
@@ -84,7 +80,9 @@ class RouteCoordinator(Agent):
             route_msg.set_metadata("performative", "inform")
             route_msg.set_metadata("ontology", "traffic-coordination")
             route_msg.set_metadata("language", "optimal-route")
-            print(f"path: {path}")
+
+            print(f"Route coordinator wyznaczył trasę dla karetki nr {self.ambulance_id} do zdarzenia {self.event_id}:")
+            print(f"{path}\n")
             route_msg.body = json.dumps(path)
             await self.send(route_msg)
 
@@ -103,15 +101,13 @@ class RouteCoordinator(Agent):
             # 1
             msg = await self.receive()
             if msg and msg.metadata["language"] == "gps-progress" and msg.metadata["ambulance_id"] == self.ambulance_id:
-                traffic_lights_msg = Message(
-                    to="traffic_light_coordinator@localhost")
+                traffic_lights_msg = Message(to="traffic_light_coordinator@localhost")
                 traffic_lights_msg.set_metadata("performative", "inform")
                 traffic_lights_msg.set_metadata("ontology", "traffic-coordination")
-                traffic_lights_msg.set_metadata("language", "change_lights")
+                traffic_lights_msg.set_metadata("language", "change-lights")
                 traffic_lights_msg.set_metadata("ambulance_id", self.ambulance_id)
                 traffic_lights_msg.body = msg.body # ma byc stringiem
                 await self.send(traffic_lights_msg)
-                print("Received GPS data: {}".format(msg.body))
 
             elif msg and msg.metadata["language"] == "gps-progress-end" and msg.metadata["ambulance_id"] == self.ambulance_id:
                 self.kill()

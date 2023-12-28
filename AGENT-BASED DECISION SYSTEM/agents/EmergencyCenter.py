@@ -27,7 +27,7 @@ class EmergencyCenter(Agent):
             self.agent.event_list[0] = True
             event_msg.body = json.dumps([14,14])
             await self.send(event_msg)
-            self.agent.add_behaviour(self.agent.FinishEvent())
+            self.agent.add_behaviour(self.agent.FinishEvent(1))
 
 
             # inicjalizacja zgłoszenia 2
@@ -41,9 +41,12 @@ class EmergencyCenter(Agent):
             self.agent.event_list[1] = True
             event_msg.body = json.dumps([6,6])
             await self.send(event_msg)
-
+            self.agent.add_behaviour(self.agent.FinishEvent(2))
 
     class FinishEvent(CyclicBehaviour):
+        def __init__(self, event_id):
+            super().__init__()
+            self.event_id = event_id
         '''
         1. oczekiwanie na wiadomość o zakończeniu przejazdu (obsłużenie zgłoszenia)
         2. zamknięcie zachowania FinishEvent, jeśli żadne zgłoszenie nie jest aktywne
@@ -53,19 +56,14 @@ class EmergencyCenter(Agent):
 
             # 1
             msg = await self.receive()
-            if msg and msg.get_metadata("language") == "event-finish":
+            if msg and msg.get_metadata("language") == "event-finish" and msg.get_metadata("event_id") == str(self.event_id):
 
-                finished_event_id = msg.get_metadata("event_id")
-                self.agent.event_list[int(finished_event_id) - 1] = False
-                print('emergency zamyka zgłoszenie')
+                self.agent.event_list[self.event_id - 1] = False
+                print(f'Zgłoszenie nr {self.event_id} zostało zrealizowane.')
 
                 # 2
                 if all(value is False for value in self.agent.event_list):
-                    print('emergency kończy finish event')
                     self.kill()
-
-
-
 
     async def setup(self):
         self.add_behaviour(self.SendEvent())
