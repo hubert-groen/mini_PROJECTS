@@ -89,6 +89,7 @@ class RouteCoordinator(Agent):
             await self.send(route_msg)
 
             self.agent.add_behaviour(self.agent.GetAmbulanceGPS())
+            self.kill()
 
 
 
@@ -99,25 +100,41 @@ class RouteCoordinator(Agent):
         '''
         async def run(self):
 
+        # FIXME:
+        # proponuję zrobić tutaj tak, że jeśli ["language"] == "gps-progress"
+        # to przesyłamy wiadomość do traffic_coordinator z prośbą o zmianę świateł
+        # a jeśli -end, to po prostu kill()
+        # info do centrali przekaże koordynator karetek
+        # ... Hubert
+
             # 1
             msg = await self.receive()
             if msg and msg.metadata["language"] == "gps-progress":
-                    current_x = msg.body[0]
-                    current_y = msg.body[1]
-                    print("Received GPS data: {}".format(current_x + ", " + current_y))
-            else:
-                print("No communicates")
+                    
+                # current_x = msg.body[0]
+                # current_y = msg.body[1]
+                # print("Received GPS data: {}".format(current_x + ", " + current_y))
 
-            if current_x == self.agent.destination_x and current_y == self.agent.destination_y:  # sprawdzenie, czy karetka jest juz na miejscu
-                self.agent.add_behaviour(self.agent.SendRouteFinished())  # Wyslanie info o zakonczeniu przejazdu
-                self.agent.last_x = current_x
-                self.agent.last_y = current_y
-                return  # return czy stop?
-            elif current_x != self.agent.destination_x or current_y != self.agent.destination_y:  # sprawdzenie, czy karetka sie przemiescila
-                self.agent.last_x = current_x
-                self.agent.last_y = current_y
-                self.agent.add_behaviour(self.agent.SendTrafficLightsRequest())  # Wyslanie info do koordynatora swiatel
+                # FIXME:
+                # tutaj skopiować wysyłanie wiadomości, to nie musi być oddzielne zachowanie
 
+                print('\n')
+
+            elif msg and msg.metadata["language"] == "gps-progress-end":
+                self.kill()
+
+            # if current_x == self.agent.destination_x and current_y == self.agent.destination_y:  # sprawdzenie, czy karetka jest juz na miejscu
+            #     self.agent.add_behaviour(self.agent.SendRouteFinished())  # Wyslanie info o zakonczeniu przejazdu
+            #     self.agent.last_x = current_x
+            #     self.agent.last_y = current_y
+            #     return  # return czy stop?
+            # elif current_x != self.agent.destination_x or current_y != self.agent.destination_y:  # sprawdzenie, czy karetka sie przemiescila
+            #     self.agent.last_x = current_x
+            #     self.agent.last_y = current_y
+            #     self.agent.add_behaviour(self.agent.SendTrafficLightsRequest())  # Wyslanie info do koordynatora swiatel
+
+
+    # treść tego zachowania wrzucić wyżej
     class SendRouteFinished(OneShotBehaviour):
         async def run(self):
             route_finished_msg = Message(
@@ -128,6 +145,8 @@ class RouteCoordinator(Agent):
             route_finished_msg.body = self.agent.call_id
             await self.send(route_finished_msg)
 
+
+    # to nie będzie tutaj potrzebne
     class SendTrafficLightsRequest(OneShotBehaviour):
         async def run(self):
             traffic_lights_msg = Message(

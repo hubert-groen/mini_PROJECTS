@@ -118,7 +118,6 @@ class AmbulanceCoordinator(Agent):
                 self.agent.add_behaviour(self.agent.GetRequestFromAmbulance(event_id, event_location, closest_ambulance))
 
 
-
     class GetRequestFromAmbulance(CyclicBehaviour):
         '''
         1. oczekiwanie na odpowiedź akceptacji zgłoszenia od karetki
@@ -156,16 +155,18 @@ class AmbulanceCoordinator(Agent):
                 await self.send(request_route_msg)
 
                 # 3
-                self.agent.add_behaviour(self.agent.UpdateRideProgress(path_request_data["ambulance_id"]))
+                self.agent.add_behaviour(self.agent.UpdateRideProgress(self.ambulance_id, self.event_location))
+                self.kill()
 
 
     class UpdateRideProgress(CyclicBehaviour):
         '''
         przesyłanie aktualnego GPS karetki (do koordynatora przejazdu)
         '''
-        def __init__(self, ambulance_id):
+        def __init__(self, ambulance_id, event_location):
             super().__init__()
             self.ambulance_id = ambulance_id
+            self.event_location = event_location
 
         async def run(self):
 
@@ -175,19 +176,19 @@ class AmbulanceCoordinator(Agent):
             update_ride_msg.set_metadata("language", "gps-progress")
             update_ride_msg.set_metadata("ambulance_id", f"{self.ambulance_id}")
 
+            current_location = getattr(self.agent, f"ambulance_{self.ambulance_id}_location", None)
 
-            location_variable = f"self.agent.ambulance_{self.ambulance_id}_location"
-            update_ride_msg.body = json.dumps(location_variable)
+            if current_location != self.event_location:
+                update_ride_msg.body = json.dumps(current_location)          
+                await self.send(update_ride_msg)
+                await asyncio.sleep(2)
 
-
-            # TODO: tutaj będzie dodane że jeśli karetka dojechała to będzie zakończenie przejazdu
-
-            
-            await self.send(update_ride_msg)
-            await asyncio.sleep(2)
-
-
-
+            else:
+                update_ride_msg.set_metadata("language", "gps-progress-finished")
+                await self.send(update_ride_msg)
+                # TODO: wysłanie wiadomości do centrali o zakończeniu zgłoszenia
+                # + ustawienie event_nr_location = None
+                self.kill()
 
     class GetAmbulanceGPS(CyclicBehaviour):
         '''

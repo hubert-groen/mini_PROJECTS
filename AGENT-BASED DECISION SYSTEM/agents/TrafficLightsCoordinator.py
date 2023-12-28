@@ -3,6 +3,13 @@ from spade.behaviour import CyclicBehaviour
 from spade.message import Message
 
 
+# FIXME:
+# wg mnie "zdefiniowane miejsca skrzyżowań" - self.trafficLightsCorditationsList
+# powinny być w agencie RouteCoordinator
+# i on patrzy, że jeśli karetka jest na tym skrzyżowaniu to wysyła prostą wiadomość
+# do trafficcoordinator (zmień tutaj światła)
+
+
 class TrafficLightCoordinator(Agent):
     def __init__(self, jid, password):
         super().__init__(jid, password)

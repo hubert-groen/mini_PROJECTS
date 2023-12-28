@@ -66,6 +66,7 @@ class Ambulance(Agent):
 
                 # 2
                 self.agent.add_behaviour(self.agent.Drive(optimal_path))
+                self.kill()
 
 
     class SendGPS(CyclicBehaviour):
@@ -99,7 +100,8 @@ class Ambulance(Agent):
                 self.agent.ambulance_position = position
                 await asyncio.sleep(2)         
 
-            # TODO: tutaj trzeba dodać że zakończone i przesłać jakiś komunikat   
+            # TODO: tutaj chynia nie trzeba nic przesyłać (bo koordynator wie o dojechaniu)
+            # po prostu zakończyć zachowanie
 
 
     async def setup(self):

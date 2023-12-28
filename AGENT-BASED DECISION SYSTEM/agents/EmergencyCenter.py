@@ -13,6 +13,11 @@ class EmergencyCenter(Agent):
     # spróbować uruchomić tę klasę "z zewnątrz",
     # tzn. działa sobie program, a ja w terminalu (czy gdzieś indziej)
     # wpisuje miejsce zdarzenia i uruchamia się ta metoda
+        
+    # dodać licznik eventów (max. 2) i nie pozwalać na dodawanie nowych
+    
+    # dodać zachowanie, które czeka na wiadomość o zakończeniu zadania
+    
     class SendEvent(OneShotBehaviour):
         async def run(self):
 
