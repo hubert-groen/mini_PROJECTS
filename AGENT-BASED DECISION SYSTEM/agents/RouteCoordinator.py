@@ -17,9 +17,9 @@ class RouteCoordinator(Agent):
             # 1
             request_route_msg = await self.receive()
             if request_route_msg and request_route_msg.get_metadata("language") == "path-request":
-                    
+
                     path_request_data = json.loads(request_route_msg.body)
-                    print('route dostał prośbę')
+                    print('Koordynator przejazdu dostał prośbę')
                     print(path_request_data)
                     print("--------------")
 
@@ -74,7 +74,7 @@ class RouteCoordinator(Agent):
             return None
 
         async def run(self):
-            
+
             # 1
             path = self.find_path((self.start_x, self.start_y), (self.destination_x, self.destination_y))
 
@@ -88,75 +88,33 @@ class RouteCoordinator(Agent):
             route_msg.body = json.dumps(path)
             await self.send(route_msg)
 
-            self.agent.add_behaviour(self.agent.GetAmbulanceGPS())
+            self.agent.add_behaviour(self.agent.GetAmbulanceGPS(str(self.ambulance_id)))
             self.kill()
 
-
-
     class GetAmbulanceGPS(CyclicBehaviour):
+        def __init__(self, amb_id):
+            super().__init__()
+            self.ambulance_id = amb_id
         '''
         1. oczekiwanie na aktualną pozycję karetki (od koordynatora karetek)
         2. wysłanie requestu zmiany świateł (do koordynatora przejazdu)
         '''
         async def run(self):
-
-        # FIXME:
-        # proponuję zrobić tutaj tak, że jeśli ["language"] == "gps-progress"
-        # to przesyłamy wiadomość do traffic_coordinator z prośbą o zmianę świateł
-        # a jeśli -end, to po prostu kill()
-        # info do centrali przekaże koordynator karetek
-        # ... Hubert
-
             # 1
             msg = await self.receive()
-            if msg and msg.metadata["language"] == "gps-progress":
-                    
-                # current_x = msg.body[0]
-                # current_y = msg.body[1]
-                # print("Received GPS data: {}".format(current_x + ", " + current_y))
+            if msg and msg.metadata["language"] == "gps-progress" and msg.metadata["ambulance_id"] == self.ambulance_id:
+                traffic_lights_msg = Message(
+                    to="traffic_light_coordinator@localhost")
+                traffic_lights_msg.set_metadata("performative", "inform")
+                traffic_lights_msg.set_metadata("ontology", "traffic-coordination")
+                traffic_lights_msg.set_metadata("language", "change_lights")
+                traffic_lights_msg.set_metadata("ambulance_id", self.ambulance_id)
+                traffic_lights_msg.body = msg.body # ma byc stringiem
+                await self.send(traffic_lights_msg)
+                print("Received GPS data: {}".format(msg.body))
 
-                # FIXME:
-                # tutaj skopiować wysyłanie wiadomości, to nie musi być oddzielne zachowanie
-
-                print('\n')
-
-            elif msg and msg.metadata["language"] == "gps-progress-end":
+            elif msg and msg.metadata["language"] == "gps-progress-end" and msg.metadata["ambulance_id"] == self.ambulance_id:
                 self.kill()
-
-            # if current_x == self.agent.destination_x and current_y == self.agent.destination_y:  # sprawdzenie, czy karetka jest juz na miejscu
-            #     self.agent.add_behaviour(self.agent.SendRouteFinished())  # Wyslanie info o zakonczeniu przejazdu
-            #     self.agent.last_x = current_x
-            #     self.agent.last_y = current_y
-            #     return  # return czy stop?
-            # elif current_x != self.agent.destination_x or current_y != self.agent.destination_y:  # sprawdzenie, czy karetka sie przemiescila
-            #     self.agent.last_x = current_x
-            #     self.agent.last_y = current_y
-            #     self.agent.add_behaviour(self.agent.SendTrafficLightsRequest())  # Wyslanie info do koordynatora swiatel
-
-
-    # treść tego zachowania wrzucić wyżej
-    class SendRouteFinished(OneShotBehaviour):
-        async def run(self):
-            route_finished_msg = Message(
-                to="emergency_center@localhost")
-            route_finished_msg.set_metadata("performative", "inform")
-            route_finished_msg.set_metadata("ontology", "traffic-coordination")
-            route_finished_msg.set_metadata("language", "route_finished")
-            route_finished_msg.body = self.agent.call_id
-            await self.send(route_finished_msg)
-
-
-    # to nie będzie tutaj potrzebne
-    class SendTrafficLightsRequest(OneShotBehaviour):
-        async def run(self):
-            traffic_lights_msg = Message(
-                to="traffic_lights_coordinator@localhost")
-            traffic_lights_msg.set_metadata("performative", "inform")
-            traffic_lights_msg.set_metadata("ontology", "traffic-coordination")
-            traffic_lights_msg.set_metadata("language", "change_lights")
-            traffic_lights_msg.body = (self.agent.last_x, self.agent.last_y)
-            await self.send(traffic_lights_msg)
-
 
     async def setup(self):
         self.add_behaviour(self.GetRouteRequest())
