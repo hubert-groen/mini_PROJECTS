@@ -95,13 +95,14 @@ class Ambulance(Agent):
             self.path = path
 
         async def run(self):
-            print('karetka zaczyna jechać')
+            print('karetka mówi że zaczyna jechać')
             for position in self.path:
                 self.agent.ambulance_position = position
                 await asyncio.sleep(2)         
 
-            # TODO: tutaj chynia nie trzeba nic przesyłać (bo koordynator wie o dojechaniu)
-            # po prostu zakończyć zachowanie
+            print('karetka mówi że dojechała')
+            self.kill()
+
 
 
     async def setup(self):

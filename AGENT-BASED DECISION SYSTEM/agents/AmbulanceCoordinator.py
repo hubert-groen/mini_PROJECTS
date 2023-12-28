@@ -98,8 +98,8 @@ class AmbulanceCoordinator(Agent):
             if get_event_msg and get_event_msg.get_metadata('language') == "event-report":
                 event_location = json.loads(get_event_msg.body)
                 event_id = get_event_msg.get_metadata('event_id')
-                location_variable = f"event_{event_id}_location"
-                setattr(self.agent, location_variable, event_location)
+                # location_variable = f"event_{event_id}_location"
+                setattr(self.agent, f"event_{event_id}_location", event_location)
 
                 # 2               
                 closest_ambulance = self.find_closest_ambulance(event_location)
@@ -155,21 +155,27 @@ class AmbulanceCoordinator(Agent):
                 await self.send(request_route_msg)
 
                 # 3
-                self.agent.add_behaviour(self.agent.UpdateRideProgress(self.ambulance_id, self.event_location))
+                self.agent.add_behaviour(self.agent.UpdateRideProgress(self.ambulance_id, self. event_id, self.event_location))
                 self.kill()
 
 
     class UpdateRideProgress(CyclicBehaviour):
         '''
-        przesyłanie aktualnego GPS karetki (do koordynatora przejazdu)
+        1. przesyłanie aktualnego GPS karetki (do koordynatora przejazdu)
+        
+        w przypadku zakończonego przejazdu:
+        2. wysłanie powiadomienia do route coordinator
+        3. wysłanie powiadomienia do emergency center
         '''
-        def __init__(self, ambulance_id, event_location):
+        def __init__(self, ambulance_id, event_id, event_location):
             super().__init__()
             self.ambulance_id = ambulance_id
+            self.event_id = event_id
             self.event_location = event_location
 
         async def run(self):
 
+            # 1
             update_ride_msg = Message(to="route_coordinator@localhost")
             update_ride_msg.set_metadata("performative", "inform")
             update_ride_msg.set_metadata("ontologia", "traffic-coordination")
@@ -184,10 +190,20 @@ class AmbulanceCoordinator(Agent):
                 await asyncio.sleep(2)
 
             else:
+                setattr(self.agent, f"event_{self.event_id}_location", None)
+                
+                # 2
                 update_ride_msg.set_metadata("language", "gps-progress-finished")
                 await self.send(update_ride_msg)
-                # TODO: wysłanie wiadomości do centrali o zakończeniu zgłoszenia
-                # + ustawienie event_nr_location = None
+
+                # 3
+                finish_event_msg = Message(to="emergency_center@localhost")
+                finish_event_msg.set_metadata("performative", "inform")
+                finish_event_msg.set_metadata("ontologia", "traffic-coordination")
+                finish_event_msg.set_metadata("language", "event-finish")
+                finish_event_msg.set_metadata("event_id", str(self.event_id))
+                await self.send(finish_event_msg)
+                
                 self.kill()
 
     class GetAmbulanceGPS(CyclicBehaviour):
