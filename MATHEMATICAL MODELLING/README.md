@@ -10,5 +10,5 @@ This project focuses on the analysis and modelling of flow networks, with a spec
 ### [PROJECT 2: Multicommodity Flow Network](multicommodity_flow_network)
 In this project, we delve into the realm of multicommodity flow networks, examining their properties and applications. Visit the subfolder for more information, documentation, and code.
 
-## Usage
+## 
 Each project has its own subfolder with detailed documentation, task formulation, implementation of linear programming models in AMPL, source code, and relevant files. Click on the project names above to navigate to the respective folders and explore the contents.
