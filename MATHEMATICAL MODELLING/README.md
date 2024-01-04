@@ -1,33 +1,14 @@
-# **Programowanie liniowe - projekt 1**
+# Mathematical Modelling
 
-Projekt pierwszy miał na celu rozwiązanie trzech zadań z zakresu modelowania matematycznego. Pełna treść zadań znajduje się [tutaj](task.pdf), natomiast formalny opis matematyczny oraz rozwiązania w [raporcie](report.pdf).
+This repository contains projects related to mathematical modelling in the field of network flow analysis. The implementation of linear programming models has been realized using __AMPL__ (A Mathematical Programming Language).
 
-1. **SIEĆ PRZEPŁYWOWA** 
+## Projects:
 
-Zadaniem było sformułowanie modelu sieciowego i rozwiązanie problemu najtańśzego przepływu przy spełnieniu wymaganych ograniczeń.
+### [PROJECT 1: Flow Networks and Assignment Tasks](flow_networks_and_assignment_tasks)
+This project focuses on the analysis and modelling of flow networks, with a specific emphasis on assignment tasks. Explore the subfolder for detailed documentation, task formulation, source code, and relevant files.
 
+### [PROJECT 2: Multicommodity Flow Network](multicommodity_flow_network)
+In this project, we delve into the realm of multicommodity flow networks, examining their properties and applications. Visit the subfolder for more information, documentation, and code.
 
-![](img/fig_1.png)
-
-*Fig.  1. Sieć przepływowa z przepustowościami i kosztami.* 
-
-2. **ZADANIE PRZYDZIAŁU** 
-
-Zadanie polegało na przydzieleniu zespołów do projektów minimalizując sumaryczny koszt - zadanie najtańszego skojarzenia.
-
-![](img/fig_2.png)
-
-*Fig.  2. ROZWIĄZANIE: przydział zespołów do projektów.*
-
-3. **ZADANIE MODELOWANIA ODCHYŁEK** 
-
-Celem tej części była minimalizacja odchyłek cen produktów od wartości bazowych, przy spełnieniu założonych wymagań.
-
-Sformułowanie zadania programowania liniowego wymagało rozwiązanie problemu wartości bezwzględnej oraz MinMax.
-
-
-![](img/fig_3.png)
-
-*Fig.  3. Zapis zadania programowania liniowego: funkcja celu + ograniczenia.*
-
-
+## Usage
+Each project has its own subfolder with detailed documentation, task formulation, implementation of linear programming models in AMPL, source code, and relevant files. Click on the project names above to navigate to the respective folders and explore the contents.
