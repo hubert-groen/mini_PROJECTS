@@ -1,44 +1,39 @@
-﻿
-# **ID3 algoritm on Cardiovascular Disease dataset**
+﻿# **ID3 Algorithm on Cardiovascular Disease Dataset**
 
-1. **ALGORYTM ID3** 
+**[Polish version](README_PL.md)**
 
-Algorytm ID3 buduje drzewo klasyfikacji w taki sposób, żeby w węzłach najbliżej korzenia znajdywały się etykiety, które najlepiej rozdzielają dane (mają największą entropię). Pozwala to na prawidłowe klasyfikowanie nowych danych, by na podstawie przejścia przez kolejne węzły wyznaczyć rezultat końcowy. W tym przypadku w węzłach znajdują się „pytania” medyczne, a na ich podstawie można dojść do liścia z „odpowiedzią” czy dany pacjent może cierpieć na choroby serca. 
+1. **ID3 ALGORITHM**
 
-Zbiór wejściowy składa się z około 70 tysięcy danych. Został on losowo podzielony na zbiór treningowy, walidacyjny i testowy (odpowiednio 60-20-20 %). Dodatkowo parametry o dużym zakresie wartości zostały poddane dyskretyzacji. 
+The ID3 algorithm builds a classification tree in such a way that labels that best separate the data (have the highest entropy) are placed in nodes closest to the root. This allows for correct classification of new data by traversing the tree nodes to determine the final result. In this case, medical "questions" are placed in the nodes, and based on them, one can reach a leaf with the "answer" whether a given patient may suffer from heart disease.
 
-Następnie z dostępnych atrybutów wybierany jest ten o najwyższej entropii (najbardziej skuteczny  w separowaniu klas), w drzewie tworzony jest węzeł decyzyjny z tym atrybutem, a ID3 wywołane rekurencyjnie dla jego podzbioru. 
+The input dataset consists of around 70 thousand records. It was randomly divided into a training, validation, and test set (60-20-20%). Additionally, parameters with a large range of values were discretized.
 
-Gotowe drzewo jest poddawane ocenie dokładności w przywidywaniu etykiet klas nowych danych.  W skrócie, funkcja „przechodzi” przez drzewo decyzyjne na podstawie danych z próbki. Na koniec lista predykcji jest porównana z prawdziwymi wartościami z klasy „cardio”. 
+Next, the attribute with the highest entropy (most effective in separating classes) is chosen from the available attributes. A decision node with this attribute is created in the tree, and ID3 is called recursively for its subset.
 
-2. **WPŁYW GŁĘBOKOŚCI DRZEWA KLASYFIKACJI NA DOKŁADNOŚĆ PREDYKCJI** 
+The resulting tree is evaluated for accuracy in predicting labels of new data. In short, the function "traverses" the decision tree based on sample data. In the end, the list of predictions is compared with the true values from the "cardio" class.
 
-Zbyt duża głębokość drzewa ID3 owszem rozgrupuje dane ze zbioru uczącego w bardzo dokładny sposób, jednak dla nowych danych klasyfikator nie będzie już taki dokładny (a nawet bardzo zły). Takie zjawisko nazywamy przeuczeniem. Dlatego w tym podpunkcie wykorzystano zbiór walidacyjny by sprawdzać  dokładność  predykcji  klasyfikatora  na  nowych  danych,  na  wszystkich  możliwych głębokościach (jest ich tyle co etykiet w zbiorze). Jest to zobrazowane na Fig.1: 
+2. **IMPACT OF CLASSIFICATION TREE DEPTH ON PREDICTION ACCURACY**
 
-![](img/fig_1.jpeg)
+Excessive depth of the ID3 tree does indeed group the training set data very accurately, but for new data, the classifier will not be as accurate (even very poor). This phenomenon is called overfitting. Therefore, in this subpoint, the validation set is used to check the prediction accuracy of the classifier on new data at all possible depths (as many as there are labels in the set). This is illustrated in Fig.1:
 
-*Fig.  1. Dokładność predykcji a głębokość drzewa ID3.* 
+![Fig. 1. Prediction accuracy vs ID3 tree depth.](img/fig_1.jpeg)
 
-Od pewnej głębokości (tutaj 5), dokładność predykcji na nowych danych znacząco spada. Ten przykład pokazuje,  że  w  algorytmie  ID3  trzeba  dobrać  odpowiednią  głębokość  drzewa  klasyfikującego,  by zapewnić optymalną generalizację, a zapobiec niedotrenowaniu lub przeuczeniu. 
+From a certain depth (here 5), the prediction accuracy for new data significantly decreases. This example shows that in the ID3 algorithm, an appropriate depth of the classification tree must be selected to ensure optimal generalization and prevent underfitting or overfitting.
 
-Dla „najlepszej głębokości” uruchomiono predykcję dla zbioru testowego (20% wszystkich danych). 
+For the "best depth," predictions were made for the test set (20% of all data).
 
-![](img/fig_2.png)
+![Fig. 2. Prediction accuracy for the test set.](img/fig_2.png)
 
-*Fig.  2. Dokładność predykcji dla zbioru testującego.* 
+As seen in Fig.2, a result of 70% accuracy is a good outcome, confirming avoidance of overfitting the classifier.
 
-Jak  widać  na  Fig.2,  rezultat  70%  dokładności  jest  dobrym  wynikiem.  Potwierdza  do  uniknięcie przeuczenia klasyfikatora. 
+3. **CONCLUSIONS AND IMPLEMENTATION NOTES**
 
-3. **WNIOSKI ORAZ UWAGI DO IMPLEMENTACJI** 
+The implementation of the ID3 classifier can be considered correct since it works with approximately 70% precision for the test dataset.
 
-Implementację klasyfikatora ID3 można uznać za poprawną, ponieważ dla testowego zbioru danych działa z precyzją około 70%. 
+However, it's worth noting that the initial discretization of data plays a significant role here. Some input attributes (e.g., height, cholesterol) have a large range of values, so certain threshold values need to be established to divide them into unique classes. This is done partly proportionally (every 20%) and selectively (potential poor division from a medical point of view). Applying a different division has a significant impact on the structure of the ID3 tree and, consequently, on subsequent predictions.
 
-Warto  jednak  zauważyć,  że  dużą  rolę  odgrywa  tutaj  początkowa  dyskretyzacja  danych.  Niektóre atrybuty wejściowe (np. wzrost, cholesterol) mają duży zakres wartości, dlatego trzeba ustalić pewne wartości progowe i podzielić je na unikalne klasy. Jest to zrobione po części procentowo (co 20%)  i wybiórczo (możliwy zły podział z medycznego punktu widzenia). Zastosowanie innego podziału ma znaczący wpływ na strukturę drzewa ID3, a więc późniejszych przewidywań. 
+![Fig. 3. Prediction accuracy vs depth for different discretization.](img/fig_3.jpeg)
 
-![](img/fig_3.jpeg)
+As shown in Fig.3, in the case of slightly modified discretization, the most optimal depth is 4.
 
-*Fig.  3. Dokładność predykcji vs głębokość dla innej dyskretyzacji.* 
-
-Jak pokazuje Fig.3, w przypadku nieco zmienionej dyskretyzacji, najbardziej optymalna głębokość wynosi 4. 
-
-Sam algorytm ID3 nie jest również najlepszym algorytmem klasyfikacji, ponieważ po pierwsze ma tendencję do tworzenia drzew decyzyjnych o zbyt dużym stopniu skomplikowania, które są w stanie idealnie  dopasować  się  do  danych  treningowych,  ale  nie  radzą  sobie  dobrze  z  nowymi  danymi testowymi.  Natomiast  przy  zastosowaniu  ograniczenia  głębokości,  ID3  nie  radzi  sobie  dobrze  z brakującymi wartościami atrybutów. W przypadku brakujących wartości, algorytm  usuwa węzeł decyzyjny i przerywa konstrukcję drzewa. Dodatkowo nie ma możliwości zastosowania atrybutów ciągłych. Dlatego istnieją bardziej zaawansowane algorytmy na jego podstawie, np. C4.5. A jeśli chodzi np. o problem brakujących wartości, istnieją różne strategie uśredniające. 
+The ID3 algorithm itself is not the best classification algorithm, firstly because it tends to create decision trees of too high complexity, which can perfectly fit training data but do not perform well on new test data. Secondly, when limiting the depth, ID3 does not handle missing attribute values well. In the case of missing values, the algorithm removes the decision node and interrupts tree construction. Additionally, it does not support continuous attributes. Therefore, more advanced algorithms based on it exist, e.g., C4.5. Regarding the issue of missing values, various imputation strategies exist.
