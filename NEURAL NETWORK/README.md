@@ -8,7 +8,8 @@ The aim of the fifth WSI laboratory task was to implement a neural network class
 
 The solution consists of two essential classes:
 + **class Layer** – representing a single layer of the neural network
-+ **class Network** – representing the neural network ("hidden_count" - the number of hidden layers, "hidden_size" - the size of hidden layers, and "learning_rate" – the learning rate)
++ **class Network** – representing the neural network
+("hidden_count" - the number of hidden layers, "hidden_size" - the size of hidden layers, and "learning_rate" – the learning rate)
 
 In summary, the "forward_propagation" method performs forward signal propagation through the neural network (activation of neuron weights). The "backward_propagation" method implements the backpropagation algorithm, allowing the updating of network weights. The backpropagation process starts by calculating the error between the network predictions and the expected output values. Then the error is backpropagated through the network layers to calculate weight gradients.
 

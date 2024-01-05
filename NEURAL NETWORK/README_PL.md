@@ -8,7 +8,8 @@ Celem piątego zadania laboratorium WSI było zaimplementowanie klasy sieci neur
 
 Rozwiązanie składa się z dwóch istotnych klas:
 + **class Layer** – reprezentuje pojedynczą warstwę sieci neuronowej
-+ **class Network** – reprezentuje sieć neuronową ("hidden_count" - liczba warstw ukrytych, "hidden_size" - rozmiar warstw ukrytych oraz "learning_rate" – współczynnik nauki)
++ **class Network** – reprezentuje sieć neuronową
+("hidden_count" - liczba warstw ukrytych, "hidden_size" - rozmiar warstw ukrytych oraz "learning_rate" – współczynnik nauki)
 
 W skrócie, metoda "forward_propagation" przeprowadza propagację sygnału w przód przez sieć neuronową (aktywacja wag neuronów). Metoda "backward_propagation" implementuje algorytm propagacji wstecznej, który umożliwia aktualizację wag sieci. Proces propagacji wstecznej rozpoczyna się od obliczenia błędu między predykcjami sieci a oczekiwanymi wartościami wyjściowymi. Następnie błąd jest propagowany wstecz przez warstwy sieci, aby obliczyć gradienty wag.
 
