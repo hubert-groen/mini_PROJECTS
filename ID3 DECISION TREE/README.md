@@ -2,7 +2,7 @@
 
 **[Polish version](README_PL.md)**
 
-1. **ID3 ALGORITHM**
+## 1. ID3 ALGORITHM
 
 The ID3 algorithm builds a classification tree in such a way that labels that best separate the data (have the highest entropy) are placed in nodes closest to the root. This allows for correct classification of new data by traversing the tree nodes to determine the final result. In this case, medical "questions" are placed in the nodes, and based on them, one can reach a leaf with the "answer" whether a given patient may suffer from heart disease.
 
@@ -12,7 +12,7 @@ Next, the attribute with the highest entropy (most effective in separating class
 
 The resulting tree is evaluated for accuracy in predicting labels of new data. In short, the function "traverses" the decision tree based on sample data. In the end, the list of predictions is compared with the true values from the "cardio" class.
 
-2. **IMPACT OF CLASSIFICATION TREE DEPTH ON PREDICTION ACCURACY**
+## 2. IMPACT OF CLASSIFICATION TREE DEPTH ON PREDICTION ACCURACY
 
 Excessive depth of the ID3 tree does indeed group the training set data very accurately, but for new data, the classifier will not be as accurate (even very poor). This phenomenon is called overfitting. Therefore, in this subpoint, the validation set is used to check the prediction accuracy of the classifier on new data at all possible depths (as many as there are labels in the set). This is illustrated in Fig.1:
 
@@ -26,7 +26,7 @@ For the "best depth," predictions were made for the test set (20% of all data).
 
 As seen in Fig.2, a result of 70% accuracy is a good outcome, confirming avoidance of overfitting the classifier.
 
-3. **CONCLUSIONS AND IMPLEMENTATION NOTES**
+## 3. CONCLUSIONS AND IMPLEMENTATION NOTES
 
 The implementation of the ID3 classifier can be considered correct since it works with approximately 70% precision for the test dataset.
 

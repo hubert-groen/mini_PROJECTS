@@ -2,7 +2,7 @@
 
 **[English version](README.md)**
 
-1. **ALGORYTM ID3** 
+## 1. ALGORYTM ID3
 
 Algorytm ID3 buduje drzewo klasyfikacji w taki sposób, żeby w węzłach najbliżej korzenia znajdywały się etykiety, które najlepiej rozdzielają dane (mają największą entropię). Pozwala to na prawidłowe klasyfikowanie nowych danych, by na podstawie przejścia przez kolejne węzły wyznaczyć rezultat końcowy. W tym przypadku w węzłach znajdują się „pytania” medyczne, a na ich podstawie można dojść do liścia z „odpowiedzią” czy dany pacjent może cierpieć na choroby serca. 
 
@@ -12,7 +12,7 @@ Następnie z dostępnych atrybutów wybierany jest ten o najwyższej entropii (n
 
 Gotowe drzewo jest poddawane ocenie dokładności w przywidywaniu etykiet klas nowych danych.  W skrócie, funkcja „przechodzi” przez drzewo decyzyjne na podstawie danych z próbki. Na koniec lista predykcji jest porównana z prawdziwymi wartościami z klasy „cardio”. 
 
-2. **WPŁYW GŁĘBOKOŚCI DRZEWA KLASYFIKACJI NA DOKŁADNOŚĆ PREDYKCJI** 
+## 2. WPŁYW GŁĘBOKOŚCI DRZEWA KLASYFIKACJI NA DOKŁADNOŚĆ PREDYKCJI
 
 Zbyt duża głębokość drzewa ID3 owszem rozgrupuje dane ze zbioru uczącego w bardzo dokładny sposób, jednak dla nowych danych klasyfikator nie będzie już taki dokładny (a nawet bardzo zły). Takie zjawisko nazywamy przeuczeniem. Dlatego w tym podpunkcie wykorzystano zbiór walidacyjny by sprawdzać  dokładność  predykcji  klasyfikatora  na  nowych  danych,  na  wszystkich  możliwych głębokościach (jest ich tyle co etykiet w zbiorze). Jest to zobrazowane na Fig.1: 
 
@@ -30,7 +30,7 @@ Dla „najlepszej głębokości” uruchomiono predykcję dla zbioru testowego (
 
 Jak  widać  na  Fig.2,  rezultat  70%  dokładności  jest  dobrym  wynikiem.  Potwierdza  do  uniknięcie przeuczenia klasyfikatora. 
 
-3. **WNIOSKI ORAZ UWAGI DO IMPLEMENTACJI** 
+## 3. WNIOSKI ORAZ UWAGI DO IMPLEMENTACJI
 
 Implementację klasyfikatora ID3 można uznać za poprawną, ponieważ dla testowego zbioru danych działa z precyzją około 70%. 
 
