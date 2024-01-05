@@ -7,9 +7,8 @@
 Celem piątego zadania laboratorium WSI było zaimplementowanie klasy sieci neuronowej, która rozpoznaje cyfrę na obrazku. Dane zostały pobrane ze zbioru "sklearn" i zorganizowane tak jak w poprzednich ćwiczeniach (podział na X i Y, oraz na zbiory: treningowy, walidacyjny, testowy).
 
 Rozwiązanie składa się z dwóch istotnych klas:
-A) **class Layer** – reprezentuje pojedynczą warstwę sieci neuronowej
-B) **class Network** – reprezentuje sieć neuronową
-("hidden_count" - liczba warstw ukrytych, "hidden_size" - rozmiar warstw ukrytych oraz "learning_rate" – współczynnik nauki)
++ **class Layer** – reprezentuje pojedynczą warstwę sieci neuronowej
++ **class Network** – reprezentuje sieć neuronową ("hidden_count" - liczba warstw ukrytych, "hidden_size" - rozmiar warstw ukrytych oraz "learning_rate" – współczynnik nauki)
 
 W skrócie, metoda "forward_propagation" przeprowadza propagację sygnału w przód przez sieć neuronową (aktywacja wag neuronów). Metoda "backward_propagation" implementuje algorytm propagacji wstecznej, który umożliwia aktualizację wag sieci. Proces propagacji wstecznej rozpoczyna się od obliczenia błędu między predykcjami sieci a oczekiwanymi wartościami wyjściowymi. Następnie błąd jest propagowany wstecz przez warstwy sieci, aby obliczyć gradienty wag.
 
