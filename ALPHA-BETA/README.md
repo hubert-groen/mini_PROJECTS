@@ -1,54 +1,45 @@
-﻿# **Alpha-Beta algorithm for Six Mens Morris game**
+﻿# Alpha-Beta Algorithm for Six Men's Morris Game
 
-1. **ALGORYTM MINIMAX Z OBCINANIEM α – β** 
+**[Polish version](README_PL.md)**
 
-Algorytm minimax pozwalana wyznaczanie wartości funkcji oceny dla poszczególnych stanów gry, wybiegając na *d* ruchów do przodu (głębokość). Algorytm działa rekursywnie aż do głębokości *d* lub znalezienia węzła terminalnego (koniec gry). Co drugą iterację preferowana jest maksymalna wartość funkcji oceny spośród dostępnych ruchów, a naprzemiennie jej minimalna wartość (symulowanie optymalnych ruchów przeciwnika). 
+## 1. MINIMAX ALGORITHM WITH α-β PRUNING
 
-Wersja algorytmu minimax z obcinaniem α – β, zapamiętuje ruch z najlepszą dotychczas pożądaną wartością (maksymalną / minimalną) i nie zagłębia się w ruchu, których przeciwnik i tak nie wykona (jeśli  gra  optymalnie),  ponieważ  są  dla  niego  niekorzystne.  Taka  metoda  pozwala  na  znaczne przyspieszenie, przeszukiwanie. W Tabeli 1 zaprezentowano czasy symulacji rozgrywki dla algorytmu minimax z i bez odcinania α – β (komentując linijki za to odpowiedzialne – Fig.1): 
+The minimax algorithm is used to determine the value of the evaluation function for different game states, projecting ahead by *d* moves (depth). The algorithm operates recursively until reaching a depth of *d* or finding a terminal node (end of the game). Every other iteration prefers the maximum value of the evaluation function among available moves, alternating with the minimum value (simulating optimal opponent moves).
 
-![](img/fig_1.png)
+The version of the minimax algorithm with α-β pruning remembers the move with the best desired value (maximum/minimum) so far and avoids exploring moves that the opponent would not make optimally (if playing optimally) because they are unfavorable. This method allows for a significant speedup in the search. Table 1 presents simulation times for the minimax algorithm with and without α-β pruning:
 
-*Fig.  1. Wyłącznie obcinanie alfa-beta.* 
+![Figure 1: α-β pruning only.](img/fig_1.png)
 
-*Tabela 1. Czasu działania algorytmu minimax bez i z obcinaniem alfa-beta.* 
+**Table 1: Execution time of the minimax algorithm with and without α-β pruning.**
 
+| Depth (for both players) | Minimax Time [s] | Minimax α-β Time [s] |
+| ------------------------- | ----------------- | -------------------- |
+| 1                         | 0.01              | 0.01                 |
+| 2                         | 1.11              | 1.46                 |
+| 3                         | 12.49             | 3.73                 |
+| 4                         | 113.29            | 15.07                |
+| 5                         | 1117.26 (approx. 19 minutes) | 37.09 |
 
+As seen, α-β pruning significantly influences the speed, especially for greater depths. The α-β algorithm achieves a balance between computation accuracy and time cost.
 
-|GŁĘBOKOŚĆ (dla obydwu graczy) |czas MINIMAX  [s] |czas MINIMAX α – β  [s] |
-| :- | :-: | :-: |
-|1 |0\.01 |0\.01 |
-|2 |1\.11 |1\.46 |
-|3 |12\.49 |3\.73 |
-|4 |113\.29 |15\.07 |
-|5 |1117\.26 (około 19 minut) |37\.09 |
+## 2. IMPACT OF SEARCH DEPTH
 
-Jak widać wpływ obcinania alfa-beta na szybkość działania, szczególnie dla większych głębokości, jest ogromny. Algorytm alfa-beta pozwala na „osiągnięcie równowagi” pomiędzy dokładnością obliczeń  a kosztem czasowym. 
+Insufficient search depth may lead to the algorithm overlooking optimal moves and resulting in an unfavorable outcome. Conversely, excessive search depth can lead to excessively long computation times, significantly slowing down the algorithm.
 
-2. **WPŁYW GŁĘBOKOŚCI PRZESZUKIWANIA** 
+Here's an example with a large difference in search depth between players (5 and 1), showing that greater depth statically increases the chances of winning:
 
-Przy  niewystarczającej  głębokości  przeszukiwania,  algorytm  może  przeoczyć  optymalne  ruchy  i doprowadzić do niekorzystnego wyniku. Z kolei, zbyt duża głębokość przeszukiwania może prowadzić do zbyt długiego czasu obliczeń i znacznie spowolnić działanie algorytmu. 
+![Figure 2: Results statistics for example search depths.](img/fig_2.jpeg)
 
-Oto przykład dla dużej różnicy głębokości pomiędzy graczami (5 i 1), jak widać statycznie, większa głębokość zwiększa szansę na wygraną: 
+**Table 2: Algorithm result statistics for different search depth combinations.**
 
-![](img/fig_2.jpeg)
+![Figure 3:](img/fig_3.png)
 
-*Fig.  2. Statystyki rezultatów dla przykładowych głębokości przeszukiwań.* 
+Analyzing Table 2 reveals the minimal impact of the minimax algorithm on game outcomes. Usually, the player with a much greater search depth wins. However, individually, these results are not satisfactory. The heuristic function, which returns values for quasi-terminal nodes (reaching a specified depth), plays a crucial role. Currently, it only provides the difference in the number of pieces between players. To improve the evaluation function, consider adding extra points for strategic positions or having two pieces adjacent to each other (a mill possible in one move). This not only improves the program's effectiveness but may also accelerate its performance.
 
+## 3. CONCLUSIONS
 
+The implementation of the minimax algorithm for the "Six Men's Morris" game has been successfully completed. However, its effectiveness becomes noticeable only for significant differences in search depth. To enhance results, defining a more advanced heuristic function with a broader range of returned values than 0, 1, or 2 (as in the current case) is essential. Such a function may be easier to design for more complex games like chess, where specific pieces have assigned values.
 
+This report demonstrated the significant impact of α-β pruning, reducing the time for 5 search depths from 19 minutes to only 30 seconds.
 
-*Tabela 2. Statystyki rezultatów algorytmu dla różnych kombinacji głębokości przeszukiwania.* 
-
-![](img/fig_3.png)
-
-
-
-Analizując Tabelę 2 widać minimalny wpływ algorytmu minimax na rezultaty rozgrywek – zazwyczaj wygrywa  gracz  z  dużo  większą  głębokością  przeszukiwań  (lewy  dolny  i  prawy  górny  róg).  Jednak  w ujęciu jednostkowym, nie są to wyniki zadowalające. Czynnikiem, który ma tu największy wpływ jest funkcja heurystyczna, zwracająca wartość dla węzłów quasi-terminalnych (czyli dojścia na wyznaczoną głębokość). Podaje ona jedynie różnicę pionków dwóch graczy. By ulepszyć funkcję oceny, można rozważyć dodanie dodatkowych punktów za „strategiczne” pozycje lub 2 pionki obok siebie (młynek możliwy w jednym ruchu). Takie rozwiązanie nie tylko wpłynie na skuteczność programu, ale może też przyśpieszyć jego działania – większa rozpiętość możliwych funkcji oceny to większe szanse na obcięcia alfa-beta. Co więcej, maleje ryzyko, że wartość heurystyki będzie się powtarzała. Obecnie dzieje się to bardzo często, a zwracany jest losowy z tych ruchów. 
-
-3. **WNIOSKI** 
-
-Implementacja  algorytmu  minimax  dla  gry  „Six  Mens  Morris”  została  zrealizowana  pomyślnie. Jednakże skuteczność jego działania można zauważyć dopiero dla dużych różnic głębokości.  W celu polepszenia rezultatów powinno się zdefiniować nową, bardziej zaawansowaną funkcję heurystyczną, której zakres zwracanych wartości jest znacznie większy nić 0, 1 lub 2 (jak w obecnym przypadku). Taką funkcję, może być łatwiej sporządzić dla bardziej skomplikowanych gier, jak np. szachy, gdzie konkretne figury mają swoje wartości. 
-
-W  sprawozdaniu  pokazano  ogromny  wpływ  obcinania  alfa-beta,  dzięki  któremu  dla  5  głębokości przeszukiwania udało się zmniejszyć czas z 19 minut na jedynie 30 sekund. 
-
-Podsumowując,  implementacja  algorytmu  deterministycznego  była  w  tym  przypadku  mocno poglądowa. Przy realnych zastosowaniach, funkcje oceny wartości i decyzje ruchów powinny być dużo bardziej zaawansowane. Algorytm symulował 100 rozgrywek, by statystyki były bardziej dokładne. To dodatkowo wydłużyło czas oczekiwania na odpowiedź. Jedną z możliwych usprawnień kodu mogłoby być zastosowanie tzw. transpozycji tablicy, co pozwoliłoby na przyspieszenie obliczeń i uniknięcie wielokrotnego  przeliczania  tych  samych  stanów  gry.  Można  to  zrobić  przechowując  wcześniej obliczone wartości heurystyki dla danego stanu gry w słowniku i korzystając z nich zamiast przeliczać je ponownie. 
+In summary, the deterministic algorithm's implementation was highly illustrative in this case. For real applications, value evaluation functions and move decisions should be much more advanced. The algorithm simulated 100 games for more accurate statistics, but this also increased the response time. One potential code improvement could be using a transposition table, speeding up calculations and avoiding repeatedly computing the same game states. This can be achieved by storing previously calculated heuristic values for a given game state in a dictionary and using them instead of recalculating.
