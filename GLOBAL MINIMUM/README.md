@@ -1,14 +1,15 @@
 ﻿# **Approximating Global Minimum of 1D and 2D Functions**
 
+
 **[Polish version](README_PL.md)**
 
 The task involves creating an algorithm to search for the global minimum of the following functions: One-dimensional function:
 
-\[ f(x) = 2x^2 + 3x + 1 \]
+$$f(x) = 2x^2 + 3x + 1$$
 
 Two-dimensional function:
 
-\[ g(x_1, x_2) = 1 - 0.6e^{-x_1^2 - x_2^2} - 0.4e^{-(x_1+1.75)^2 - (x_2-1)^2} \]
+$$g(x_1, x_2) = 1 - 0.6e^{-x_1^2 - x_2^2} - 0.4e^{-(x_1+1.75)^2 - (x_2-1)^2}$$
 
 The gradients of the above functions are provided in the task instructions and are included in the code. Key algorithm parameters are described in points 2 and 3, namely:
 

@@ -1,6 +1,6 @@
 ﻿# **Aproksymacja globalnego minimum funkcji 1D i 2D**
 
-**[English version](README_PL.md)**
+**[English version](README.md)**
 
 Zadanie wymaga stworzenia algorytmu do poszukiwania minimum globalnego następujących funkcji: Funkcja jednowymiarowa: 
 
