@@ -1,26 +1,28 @@
-﻿# **Approximating global minimum of 1D and 2D functions**
+﻿# **Approximating Global Minimum of 1D and 2D Functions**
 
-Zadanie wymaga stworzenia algorytmu do poszukiwania minimum globalnego następujących funkcji: Funkcja jednowymiarowa: 
+**[Polish version](README_PL.md)**
 
-$$f(x) = 2x^2 + 3x + 1$$
+The task involves creating an algorithm to search for the global minimum of the following functions: One-dimensional function:
 
-Funkcja dwuwymiarowa: 
+\[ f(x) = 2x^2 + 3x + 1 \]
 
-$$g(x_1, x_2) = 1 - 0.6e^{-x_1^2 - x_2^2} - 0.4e^{-(x_1+1.75)^2 - (x_2-1)^2}$$
+Two-dimensional function:
 
+\[ g(x_1, x_2) = 1 - 0.6e^{-x_1^2 - x_2^2} - 0.4e^{-(x_1+1.75)^2 - (x_2-1)^2} \]
 
-Gradienty powyższych funkcji zostały podane w instrukcji zadania oraz są zawarte w kodzie. Kluczowe parametry algorytmu zostały opisane w punktach 2 oraz 3, są to: 
+The gradients of the above functions are provided in the task instructions and are included in the code. Key algorithm parameters are described in points 2 and 3, namely:
 
-- **learning\_rate** – współczynnik długości kroku, 
-- **precision** – dokładność znalezionego rozwiązania (pomiędzy dwoma ostatnimi iteracjami), 
-- **max\_steps** – limit iteracji. 
-1. **FUNKCJA JEDNOWYMIAROWA f(x)** 
+- **learning\_rate** – step size coefficient,
+- **precision** – accuracy of the found solution (between the last two iterations),
+- **max\_steps** – iteration limit.
 
-Analiza uruchomienia algorytmu dla przykładowej wartości początkowej (x = 2): 
+## 1. **ONE-DIMENSIONAL FUNCTION \( f(x) \)**
 
-![](img/fig_1.jpeg)
+Analysis of running the algorithm for an initial value (x = 2):
 
-*Fig.  1. Funkcja f(x) dla x=2.* 
+![Fig. 1](img/fig_1.jpeg)
+
+*Fig.  1. Function \( f(x) \) for \( x=2 \).* 
 
 Iteration 1: 2 
 
@@ -28,140 +30,153 @@ Iteration 2: 1.89
 
 Iteration 3: 1.7844 
 
-(…) 
+(...) 
 
-Iteration 169: -0.7471099866795737 Iteration 170: -0.7472255872123907 Iteration 173: -0.7475453771279417 
+Iteration 169: -0.7471099866795737 
+Iteration 170: -0.7472255872123907 
+Iteration 173: -0.7475453771279417 
 
-RESULTS SUMMARY FOR f(x): 
+**RESULTS SUMMARY FOR \( f(x) \):**
 
-learning\_rate:   0.01 precision:   0.001 max\_steps:   10000 
+- *learning\_rate:*   0.01 
+- *precision:*   0.001 
+- *max\_steps:*   10000 
+- *x\_initial:*     2 
+- *x\_final:*       -0.747643562042824 
+- *iterations:*    173 
 
-x\_initial:     2 
+*Learning\_rate* determines how quickly the algorithm should move towards the minimum of the function. If it is too small, it may prolong the computation time and provide less accurate solutions. For example:
 
-x\_final:       -0.747643562042824 iterations:    173 
+**RESULTS SUMMARY FOR \( f(x) \):**
 
-*Learning\_rate* określa jak szybko algorytm powinien poruszać się w kierunku minimum funkcji. Jeśli jest on bardo mały, może wydłużać czas obliczeń, a nawet podawać mniej dokładne rozwiązanie, dla przykładu: 
+- *learning\_rate:*   **0.001** 
+- *precision:*   0.001 
+- *max\_steps:*   10000 
+- *x\_initial:*     2 
+- *x\_final:*    -0.72512311472929 
+- *iterations:*    1174 
 
-RESULTS SUMMARY FOR f(x): 
+Despite the smaller learning rate, the final result is less accurate. On the other hand, in the case of a too large *learning\_rate*, the algorithm may "skip" local minimums and never reach them:
 
-learning\_rate:   **0.001** precision:   0.001 max\_steps:   10000 
+**RESULTS SUMMARY FOR \( f(x) \):**
 
-x\_initial:     2 
+- *learning\_rate:*   **0.5** 
+- *precision:*   0.001 
+- *max\_steps:*   10000 
+- *x\_initial:*     2 
+- *x\_final:*    2.0 
+- *iterations:*    10000 
 
-x\_final:    -0.72512311472929 iterations:    1174 
+Consider another one-dimensional function with two minima:
 
-Mimo mniejszego learning rate wynik końcowy jest mniej dokładny. Natomiast w przypadku zbyt dużego  *learning\_rate*,  algorytm  w  kolejnych  krokach  może  „przeskakiwać”  minimum  lokalne  i prawdopodobnie nigdy do niego nie trafić: 
+\[ f_2(x) = 4 \cdot 3 - 8 \cdot x + 1 \]
 
-RESULTS SUMMARY FOR f(x): 
+![Fig. 2](img/fig_2.jpeg)
 
-learning\_rate:   **0.5** precision:   0.001 max\_steps:   10000 
+*Fig.  2. Function \( f_2(x) \).* 
 
-x\_initial:     2 x\_final:    2.0 iterations:    10000 
+The final result strongly depends on the initial point. Points greater than \( x = 0 \) have little chance of finding the global minimum. A random factor or an increased *learning\_rate* could be used, with the consequences described above, as the algorithm will converge towards the most promising direction (mathematically).
 
-Rozważmy, przypadek innej funkcji jednowymiarowej, w której mamy dwa minima: 
+The discussion of the algorithm continues in point 2. Two-dimensional function.
 
-2( ) = 4 ∙ 3 − 8 ∙ + 1 
+## 2. **TWO-DIMENSIONAL FUNCTION \( g(x) \)**
 
-![](img/fig_2.jpeg)
+![Fig. 3](img/fig_3.jpeg)
 
-*Fig.  2. Funkcja f2(x).* 
+*Fig.  3. Source of graphs: wolframalpha.com.* 
 
+Analysis of running the algorithm for example values **\( x_1 = 1, x_2 = 1 \)**:
 
-Wynik końcowy jest silnie uzależniony od punktu początkowego. Punkty większe od x = 0, mają małe szanse na znalezienie minimum globalnego. Musiałby zostać użyty czynnik losowy lub zwiększony *learning\_rate* (wraz z konsekwencjami opisanymi powyżej), ponieważ algorytm będzie najchętniej zbiegał w kierunku który wydaje się najbardziej obiecujący (matematycznie). Bardziej zaawansowane algorytmy  przeszukiwania  posiadają  dodatkowe  parametry  losowe,  sprawdzające  alternatywne „ścieżki”,  by  uniknąć  tzw.  „tunel-vision”  –  rozważanie  tylko  jednego  wariantu,  z  całkowitym pominięciem innych możliwości. 
+![Fig. 4](img/fig_4.jpeg)
 
-Omówienie algorytmu jest kontynuowane w punkcie 2. Funkcja dwuwymiarowa. 
+*Fig.  4. Function \( g(x) \) for the starting point (1,1).* 
 
-2. **FUNKCJA DWUWYMIAROWA g(x)** 
+Iteration 1: (0.9983645459581533, 0.9983759766011606) 
+Iteration 2: (0.9967210560921321, 0.9967440018664104) 
+Iteration 3: (0.9950694732051684, 0.9951040195353547) 
 
-![](img/fig_3.jpeg)
+(...) 
 
-*Fig.  3. Źródło wykresów: wolframalpha.com* 
+Iteration 540: (-0.011180401331944471, 0.02053098715316187) 
+Iteration 541: (-0.011305496913203547, 0.020430748805464097) 
+Iteration 542: (-0.011429135203858663, 0.02033176213582331) 
 
-Analiza uruchomienia algorytmu dla przykładowych wartości **(x1 = 1, x2 = 1)**: 
+**RESULTS SUMMARY FOR \( g(x) \):**
 
-![](img/fig_4.jpeg)
+- *learning\_rate:*   0.01 
+- *precision:*   0.001 
+- *max\_steps:*   10000 
+- *x\_initial:*        (1, 1) 
+- *x\_final:*          (-0.011429135203858663, 0.02033176213582331) 
+- *iterations:*     542 
 
-*Fig.  4. Funkcja g(x) dla punktu początkowego (1,1).* 
+The algorithm ended after 542 iterations. A significant increase in *learning\_rate = 1* will multiply the gradient by a greater value, and the "step" to the next point will be larger, so the solution will be found in fewer iterations:
 
-Iteration 1: (0.9983645459581533, 0.9983759766011606) Iteration 2: (0.9967210560921321, 0.9967440018664104) Iteration 3: (0.9950694732051684, 0.9951040195353547) 
+**RESULTS SUMMARY FOR \( g(x) \):**
 
-(…) 
+- *learning\_rate:*   1 
+- *precision:*   0.001 
+- *max\_steps:*   10000 
+- *x\_initial:*        (1, 1) 
+- *x\_final:*          (-0.02194210570455997, 0.012552612680346655) 
+- *iterations:*     9 
 
-Iteration 540: (-0.011180401331944471, 0.02053098715316187) Iteration 541: (-0.011305496913203547, 0.020430748805464097) Iteration 542: (-0.011429135203858663, 0.02033176213582331) 
+However, now there is a risk that multiplying by a too large value, we might "jump over" the correct solution, and the algorithm will converge to the wrong point. For example, for *learning\_rate = 1:*
 
-RESULTS SUMMARY FOR g(x): 
+![Fig. 5](img/fig_5.jpeg)
 
-learning\_rate:   0.01 precision:   0.001 max\_steps:   10000 
+*Fig. 5. Function g(x) for learning\_rate = 1.*
 
-x\_initial:        (1, 1) 
+The *“precision”* parameter, comparing the difference between the last two points, has similar advantages and disadvantages: a higher precision value may reduce the number of iterations but may also not get close enough to the ideal result.
 
-x\_final:          (-0.011429135203858663, 0.02033176213582331) iterations:     542 
+The *“max\_steps”* parameter acts as a safeguard to prevent the algorithm from taking a very large number of steps. Exceeding the assumed value indicates that the result with the required accuracy has not been found.
 
-Algorytm  zakończył  się  po  542  iteracjach.  Znaczne  zwiększenie  *learning\_rate  =  1*  spowoduje pomnożenie gradientu przez większą wartość – „krok” do następnego punktu będzie większy, więc znajdziemy rozwiązanie w mniejszej licznie iteracji: 
+Let's consider other initial points for the function g(x): **(x1 = 4, x2 = 4)**
 
-RESULTS SUMMARY FOR g(x): 
+![Fig. 6](img/fig_6.jpeg)
 
-learning\_rate:   1 precision:   0.001 max\_steps:   10000 
+*Fig. 6. Function g(x) for a distant initial point.*
 
-x\_initial:        (1, 1) 
+**RESULTS SUMMARY FOR g(x):**
 
-x\_final:          (-0.02194210570455997, 0.012552612680346655) iterations:     9 
+- *learning\_rate:*   0.01 
+- *precision:*   0.001 
+- *max\_steps:*   10000 
+- *x\_initial:*        (4, 4) 
+- *x\_final:*          (3.9999999999999996, 3.9999999999999996) 
+- *iterations:*     1
 
-Jednakże  teraz  pojawia  się  ryzyko,  że mnożąc  przez  zbyt  dużą wartość  „przeskoczymy”  właściwe rozwiązanie i algorytm będzie zbieżny do niewłaściwego punktu. Np. dla *learning\_rate = 1:* 
+Function g(x) has 2 significant minima, but outside of them, on the X1-X2 plane, it is very constant (identity), so steps taken far from the extremum will result in small changes, and the *“precision”* condition will be met in 1 step. You can increase *“learning\_rate”*, but we have to face the consequences described above (jumping over the correct solution).
 
-![](img/fig_5.jpeg)
+Another interesting initial point is in the vicinity of a local minimum, for example, **(x1 = -2, x2 = 2)**.
 
-*Fig.  5. Funkcja g(x) dla learning\_rate = 1.* 
+![Fig. 7](img/fig_7.jpeg)
 
+*Fig. 7. Local minimum problem in function g(x).*
 
-Parametr *„precision”* porównujący różnicę pomiędzy dwoma ostatnimi punktami posiada podobne zalety  i  wady:  większa  wartość  dokładności  może  zmniejszyć  liczbę  iteracji,  ale  również  nie doprowadzić wystarczająco blisko do idealnego wyniku. 
+**RESULTS SUMMARY FOR g(x):**
 
-Parametr *„max\_steps”* działa jako zabezpieczenie, by algorytm nie wykonywał bardzo dużej ilości kroków. Przekroczenie założonej wartości zawiadamia, że rezultat z wymaganą dokładnością nie został odnaleziony. 
+- *learning\_rate:*   0.01 
+- *precision:*   0.001 
+- *max\_steps:*   10000 
+- *x\_initial:*        (-2, 2) 
+- *x\_final:*          (-1.7109787562145413, 0.9918727284019442) 
+- *iterations:*     590
 
-Rozważmy inne przykładowe punkty początkowe dla funkcji g(x): **(x1 = 4, x2 = 4)** 
+Despite performing a large number of iterations, the algorithm provided a local minimum value, due to the decreasing precision of the step between consecutive points in its vicinity.
 
-![](img/fig_6.jpeg)
+Conclusions and proposed solutions to the mentioned problems are described in 3. Conclusions.
 
-*Fig.  6. Funkcja g(x) dla dalekiego punktu początkowego.* 
+It is worth noting that in the described algorithm, changes in steps for x1 and x2 are made in parallel (in one loop). In the case of a function with a descent that is roughly the same from each side, this is not a problem. However, this solution would not be applicable to more challenging optimization test functions, e.g., the Rosenbrock banana function, which has narrow strips of local minima.
 
-RESULTS SUMMARY FOR g(x): 
+![Fig. 8](img/fig_8.png)
 
-learning\_rate:   0.01 precision:   0.001 max\_steps:   10000 
+*Fig. 8. Source of the graph: A. Eilmes, Numerical Methods in Chemistry.*
 
-x\_initial:        (4, 4) 
+This means that starting from the point (x = 1.5, y = 2.5), the algorithm should first modify the y values, staying in a narrow range *0.5 < x < 1.5*. As it approaches the global minimum, leave the y values in the range *0 < y < 0.5* and take larger steps for x.
 
-x\_final:          (3.9999999999999996, 3.9999999999999996) iterations:     1 
+## **3. CONCLUSIONS**
 
-Funkcja g(x) posiada 2 znaczące minima, jednak poza nimi na płaszczyźnie X1-X2 jest bardzo stała (identycznościowa), z tego względu kroki wykonane w funkcji z dala od extremum dadzą małe zmiany i warunek *„precision”* zostanie spełniony w 1 kroku. Można zwiększyć *„learning\_rate”*, jednak musimy się zmierzyć z tego konsekwencjami, opisanymi powyżej (przeskoczenie właściwego rozwiązania). 
+There is no unequivocal solution to the above problems with parameter selection. As seen, changing their values (*learning\_rate, precision, max\_steps*) is still random attempts with low chances of success. A much more optimal solution would be to run the algorithm for several different initial points and statistically determine the best one (e.g., average, median). Most search algorithms operate in random mode, but it happens that before optimization, we have so-called "expert knowledge." In such cases, research should be focused on the suggested area.
 
-Kolejnymi  ciekawymi  wartościami  początkowymi,  będą  punkty  w  okolicy  minimum  lokalnego, np. **(x1 = -2, x2 = 2)**. 
-
-![](img/fig_7.jpeg)
-
-*Fig.  7. Problem minimum lokalnego w funkcji g(x).* 
-
-RESULTS SUMMARY FOR g(x): 
-
-learning\_rate:   0.01 precision:   0.001 max\_steps:   10000 
-
-x\_initial:        (-2, 2) 
-
-x\_final:          (-1.7109787562145413, 0.9918727284019442) iterations:     590 
-
-Mimo wykonania dużej liczby iteracji, algorytm podał wartość minimum lokalnego, ze względu na malejącą precyzję kroku pomiędzy kolejnymi punktami w jego okolicy. 
-
-Wnioski oraz proponowane rozwiązanie wymienionych problemów zostało opisane w 3. Wnioski. 
-
-Warto dodać, że w opisywanym algorytmie zmiany kroków dla x1 i x2 są dokonywane równolegle  (w jednej pętli). W przypadku funkcji do minimum której spadek jest mniej więcej taki sam z każdej ze stron, nie stanowi to problemu. Jednak to rozwiązanie nie miałoby zastosowania przy trudniejszych funkcjach do testowania algorytmów optymalizacji, np. funkcji bananowej Rosenbrocka, która posiada wąskie paska minimów lokalnych. 
-
-![](img/fig_8.png)
-
-*Fig.  8. Źródło wykresu: A. Eilmes, Metody numeryczne w chemii.* 
-
-To znaczy, że idąc od punktu (x = 1.5, y = 2.5) algorytm najpierw powinien modyfikować bardziej wartości  y,  pozostając  w  wąskim  zakresie  *0.5  <  x  <1.5*.  Natomiast  przybliżając  się  do  minimum globalnego, pozostawić wartości y granicach *0 < y < 0.5*, a wykonywać większe kroki dla x. 
-
-**3.  WNIOSKI** 
-
-Nie  ma  jednoznacznego  rozwiązania  powyższych  problemów  z  doborem  parametrów.  Jak  widać zmienianie ich wartości (*learning\_rate, precision, max\_steps*) to nadal losowe próby, które mają niskie szanse powodzenia. Dużo bardziej optymalnym rozwiązaniem będzie uruchomienie algorytmu dla kilku różnych punktów początkowych i statystyczne wyłonienie najlepszego (np. średnia, mediana). Większość  algorytmów  przeszukiwania  działa  trybie  losowym,  jednak  zdarza  się,  że  przed optymalizacją  posiadamy  tzw.  „wiedzę  ekspercką”.  Należy  wtedy  ukierunkować  badania  na sugerowany obszar. 
-
-Niezależnie od metody początkowej, po znalezieniu najlepszego punktu można dodatkowo zawęzić poszukiwania w jego okolicy znacząco zmniejszając *„learning\_rate”* oraz *„precision”*, w zależności jak bardzo dokładne rozwiązanie nas interesuje (zazwyczaj różnice w okolicach 0.1 – 0.001 są uznawane optymalne). 
+Regardless of the initial method, after finding the best point, the search in its vicinity can be further narrowed down significantly by reducing *“learning\_rate”* and *“precision”*, depending on how accurate a solution is desired (usually differences in the range of 0.1 – 0.001 are considered optimal).
