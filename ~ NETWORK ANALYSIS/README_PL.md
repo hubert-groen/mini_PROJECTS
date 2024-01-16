@@ -4,7 +4,7 @@
 
 Porównanie cech sieciowych państw-węzłów w sieci przepływów finansowych lub towarowych z analogicznymi cechami w sieci organizacji międzynarodowych lub bilateralnych umów handlowych.
 
-## KONCEPCJA
+## 1. KONCEPCJA
 
 ### Sieć Przepływów Finansowych
 
@@ -25,7 +25,7 @@ Sieć połączeń stworzona na podstawie tych danych będzie miała następując
 
 *Fig. 1. Przykładowe wiersze ze zbioru danych OECD.*
 
-## Sieć Organizacji Międzynarodowych
+### Sieć Organizacji Międzynarodowych
 
 Zbiory danych IGO zawierają informacje o organizacjach międzynarodowych, których członkami są co najmniej 3 państwa, z lat 1815-2014. Dane IGO są gromadzone w odstępach 5-letnich w latach 1815-1965, a następnie corocznie.
 
@@ -45,14 +45,7 @@ Sieć połączeń stworzona na podstawie tych danych będzie miała następując
 - Waga krawędzi odpowiada liczbie wspólnych organizacji dla danej pary państw.
 
 
-
-
-
-
-
-
-
-## 1. Przygotowanie danych
+## 2. PRZYGOTOWANIE DANYCH
 Po pobraniu danych wymagały one przygotowania, aby można było poddać je dalszej analizie. Wszystkie kroki można sprawdzić w pliku [dataset_processing.ipynb](link_do_pliku), który oryginalne pliki .csv przekształca w pliki gotowe do dalszych kroków poprzez następujące operacje:
 
 Po pobraniu danych konieczne było ich przygotowanie, aby umożliwić dalszą analizę. Wszystkie kroki tego procesu można przeanalizować w pliku "dataset_processing.ipynb". Poniżej przedstawiamy główne etapy przekształceń danych:
@@ -75,12 +68,12 @@ Po pobraniu danych konieczne było ich przygotowanie, aby umożliwić dalszą an
 Pliki csv z przygotowanymi do analizy danymi znajdują się [tutaj](link_do_plikow_csv).
 
 
-# Analiza
+## 3. ANALIZA
 
-## Funkcje analizy
 Funkcje, za pomocą których została przeprowadzona analiza, znajdują się w pliku [clustering.ipynb](link_do_pliku).
 
-### 1. Klastrowanie aglomeracyjne
+### 3.1 KLASTROWANIE ALGOMERACYJNE
+
 W zbiorze organizacji do tych samych klastrów należą głównie państwa z tych samych kontynentów - zwłaszcza w samych centrach skupisk. Na obrzeżach klastrów mogą znajdować się państwa-węzły z innych kontynentów, ale są one tak małe (z bardzo małą ilością przepływów), że można uznać to za szum (gdzieś musiały zostać dołączone).
 
 Przykładem może być Somalia, która została dołączona do skupiska Bliskiego Wschodu, mimo że geograficznie leży bardzo blisko (od Jemenu dzieli ją jedynie zatoka Adeńska). W kontekście rysowania grafu widać, że Somalia leży w prawym górnym rogu klastra, niejako "przyciągana" przez klaster afrykański znajdujący się dalej w tym kierunku.
@@ -135,7 +128,7 @@ W poniższej macierzy przedstawiono średnie przepływy finansowe pomiędzy klas
 
 Da się zauważyć nieprzypadkowe podobieństwo pomiędzy niektórymi klastrami, co może wskazywać na to, że przynależność do organizacji wpływa na przepływy finansowe.
 
-## Analiza rdzeni
+## 3.2 ANALIZA RDZENI
 
 Dla sieci przepływów finansowych wyznaczono rdzeń o najwyższym rzędzie, równym 31. Przeważająca część krajów wchodząca w jego skład to kraje europejskie oraz najważniejsze kraje świata: USA, Kanada, Chiny itp. Jedynym wyróżniającym się członkiem w tym zestawieniu jest Korea Północna, posiadająca 31 połączeń finansowych z innymi krajami tego zestawienia.
 
@@ -148,18 +141,17 @@ Wszystkie kraje wchodzące w skład rdzenia są tego samego - maksymalnego stopn
 Analiza stopni wierzchołków przedstawionych krajów w oryginalnej sieci wskazuje trzy kraje - liderów: Tunezja (stopień = 82), Egipt (stopień=80), RPA (stopień=79). Pokrywa się to z faktem, że wskazane kraje są jednymi z najlepiej rozwiniętych w Afryce. Wniosek ten można również potwierdzić sumując przepływy finansowe poszczególnych krajów afrykańskich. Pod takim względem pierwszy jest Egipt (6995.8 mln USD), drugie RPA (6202.2 mln USD) a Tunezja zajmuje piąte miejsce w tym zestawieniu (3681.1 mln USD).
 
 
-# 3. Wskaźniki liczbowe
+## 3.3 WSKAŹNIKI LICZBOWE
 
-## WSKAŹNIK PRZEPŁYWU FINANSOWEGO MIĘDZY ORGANIZACJAMI
+| WSKAŹNIK                                          | PRZEPŁYWY FINANSOWE | ORGANIZACJE | ORGANIZACJE (filtracja > 50)  |
+|---------------------------------------------------|---------------------|-------------|-------------------------------|
+| Przechodniość (Globalny współczynnik gronowania)  | 0.35                | 1.0         | 0.69                          |
+| Uśredniony lokalny współczynnik gronowania        | 0.89                | 1.0         | 0.77                          |
+| Gęstość                                           | 0.195               | 1.0         | 0.24                          |
+| Asortatywność (numeric_assortativity_coefficient) | -0.73               | nan         | 0.22                          |
 
-### Filtracja > 50
-
-- Przechodniość (Globalny współczynnik gronowania): 0.35
-- Uśredniony lokalny współczynnik gronowania: 0.89
-- Gęstość: 0.195
-- Asortatywność (numeric_assortativity_coefficient): -0.73 (dla organizacji), nan (dla przepływów finansowych)
   
-### Globalny oraz uśredniony lokalny współczynnik gronowania
++ ### Globalny oraz uśredniony lokalny współczynnik gronowania
 
 Wartość tych wskaźników w zbiorze danych organizacji jest dużo wyższa, dlatego że każde państwo przynależy do przynajmniej jednej wspólnej organizacji z innym państwem - jest to przechodniość maksymalna. Po odrzuceniu powiązań mniejszych niż 50, naturalnie będzie ona trochę niższa, ale nadal na wysokim poziomie. Można z tego wnioskować, że państwa, które już są aktywne we współpracy, mają tendencję do utrzymywania i rozwijania więzi, wchodząc w nowe kolaboracje. To zjawisko jest znane w teorii sieci jako preferencyjne przyłączanie się do węzłów o większym stopniu węzła (w tym przypadku, większej aktywności współpracy).
 
@@ -167,15 +159,15 @@ W kontekście sieci przepływów finansowych, gęstość krawędzi w sieci jest 
 
 W skrócie, w analizie sieci przepływów finansowych nie występują państwa, które mają jedynie pojedyncze, ale relatywnie duże współprace. Zazwyczaj, jeśli państwo operuje na wysokich wartościach, to równocześnie posiada wiele współprac, co może sugerować, że istnieją silne powiązania z różnymi partnerami.
 
-### Gęstość
++ ### Gęstość
 
 Po usunięciu krawędzi w grafie organizacji, świadczących o współwystępowaniu pary państw w poniżej 50 organizacjach, gęstość grafu spadła do poziomu zbliżonego do gęstości w grafie przepływów finansowych. Oznacza to, że nałożenie wspomnianego filtra “zbliżyło” obie sieci w sensie ilości połączeń między węzłami. W obydwu dominują połączenia między państwami o wysokim rozwoju gospodarczym i dużych rozmiarach. Można to interpretować jako potwierdzenie hipotezy, że geografia ma istotny wpływ na współpracę międzynarodową.
 
-### Asortatywność
++ ### Asortatywność
 
 Analiza asortatywności w przypadku przepływów finansowych świadczy o dysasortatywności tej sieci. Kraje o wysokim stopniu mają tendencję do tworzenia połączeń z krajami o małym stopniu - znaczące kraje często inwestują w biedniejsze/rozwijające się państwa. W przypadku sieci organizacji, wskaźnik asortatywności jest niski, może to potwierdzać tezę, że geografia ma istotny wpływ na współpracę międzynarodową, bardziej znaczący niż np. zamożność państwa (kraje afrykańskie).
 
-## 3. Podsumowanie
+## 4. PODSUMOWANIE
 
 Analiza sieci przepływów finansowych oraz sieci organizacji uwydatniła istotne zależności, które korespondują z położeniem geograficznym poszczególnych państw. Obie te struktury wyraźnie odzwierciedlają wpływ geografii na dynamikę relacji międzynarodowych. Organizacje międzynarodowe często opierają się o położenie geograficzne (Unia Europejska, Unia Afrykańska). W kontekście przepływów finansowych widoczna jest tendencja do współpracy między krajami leżącymi blisko siebie, jednak ten efekt jest wyraźnie przytłumiony przez współpracę między gigantami gospodarczymi. Analiza rzuca także światło na wspólne cechy obu sieci, wskazujące np. wyróżniających liderów na kontynencie afrykańskim, którzy należą do wielu organizacji oraz wymieniają relatywnie dużą ilość finansów z innymi państwami.
 
