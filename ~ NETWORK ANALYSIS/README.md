@@ -101,7 +101,17 @@ W pozostałych skupiskach, ogólny podział geograficzny nie jest aż tak zauwa�
 
 W poniższej macierzy przedstawiono podobieństwo Jaccarda pomiędzy klastrami z sieci przepływów finansowych (g1) i sieci organizacji międzynarodowych (g2). Klastry 0,1,2 i 3 z sieci g2 posiadają swój podobny odpowiednik w grupie klastrów z sieci g1. Klaster 4 z sieci g2 jest natomiast podobny do dwóch klastrów z sieci g1. W tabeli przedstawiono też wybrane państwa wspólne między najbardziej podobnymi klastrami z g1 i g2. Klastry 4 i 5 z sieci g1 nie mają podobnego odpowiednika w sieci g2.
 
-#### Macierz podobieństwa pomiędzy klastrami z różnych sieci
+![Fig.5](img/fig_5.png)
+
+*Fig. 5. Macierz podobieństwa pomiędzy klastrami z różnych sieci.*
+
+- Podobieństwo klastrów 0-0: głównie państwa europejskie
+- Podobieństwo klastrów 1-1: głównie państwa afrykańskie
+- Podobieństwo klastrów 2-2: głównie państwa Ameryki Południowej i Środkowej
+- Podobieństwo klastrów 2-3: głównie państwa Azji
+- Podobieństwo klastrów 0-4: głównie państwa bliskiego wschodu
+- Podobieństwo klastrów 1-4: głównie państwa bliskiego wschodu
+
 
 |          | g1 cluster 0 | g1 cluster 1 | g1 cluster 2 | g1 cluster 2 | g1 cluster 0 | g1 cluster 1 |
 |----------|--------------|--------------|--------------|--------------|--------------|--------------|
@@ -121,7 +131,11 @@ Da się zauważyć nieprzypadkowe podobieństwo pomiędzy niektórymi klastrami,
 
 W poniższej macierzy przedstawiono średnie przepływy finansowe pomiędzy klastrami wyodrębnionymi na podstawie połączeń w organizacjach międzynarodowych. Średni przepływ pomiędzy klastrami X i Y jest zdefiniowany jako średnia arytmetyczna przepływów pomiędzy każdą możliwą unikalną parą państw (x, y), gdzie x jest państwem z klastra X, a y jest państwem z klastra Y. Cyfra 0 w macierzy oznacza brak danych. Dla klastrów 0 i 2 potwierdza się hipoteza, że państwa, które należą wspólnie do organizacji międzynarodowych mają pomiędzy sobą większy przepływ niż do innych państw. Dla klastrów 1,3 i 4, do których należą państwa Afryki, Azji wschodniej i Ameryki Południowej nie mieliśmy wystarczającej ilości danych, żeby zweryfikować lub wykluczyć hipotezę (przepływy wynoszą 0).
 
-**Średnie przepływy finansowe pomiędzy państwami z różnych klastrów wyodrębnionych na podstawie sieci organizacji międzynarodowych**
+![Fig.6](img/fig_6.png)
+
+*Fig. 6. Średnie przepływy finansowe pomiędzy państwami z różnych klastrów wyodrębnionych na podstawie sieci organizacji międzynarodowych.*
+
+
 
 |          | g1 cluster 0 | g1 cluster 1 | g1 cluster 2 | g1 cluster 2 | g1 cluster 0 | g1 cluster 1 |
 |----------|--------------|--------------|--------------|--------------|--------------|--------------|
