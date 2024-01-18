@@ -82,7 +82,10 @@ Warto zauważyć, że klastry oznaczone różnymi kolorami wykazują tendencję 
 
 Sieć organizacji jest grafem pełnym, ponieważ każdy kraj należy do przynajmniej jednej wspólnej organizacji z dowolnym innym krajem. Większość współprac to organizacje lokalne, począwszy od znanych Unia Europejska, Unia Afrykańska, Mercosur (Ameryka Południowa), po te mniejsze: Rada Nordycka, Beneluks, COPPPAL (Ameryka Łacińska).
 
-### Sieć organizacji międzynarodowych z podziałem na klastry
+![Fig.3](img/fig_3.png)
+
+*Fig. 3. Sieć organizacji międzynarodowych z podziałem na klastry.*
+
 W zbiorze przepływów finansowych również widoczne są powiązania geograficzne, jednak są czasem "zdominowane" przez skalę wielkości finansów, co skutkuje obok siebie lądującymi gigantami, którzy niekoniecznie leżą na tym samym kontynencie.
 
 Dobrym przykładem jest klaster fioletowy skupiający obok siebie: USA, Chiny, Japonię, Kanadę, Izrael, Koreę Północną czy Australię. Powiązania te są spowodowane stopniem rozwoju gospodarczego państw. Do tego klastra dołączają także Meksyk, Indonezja, Tajlandia, Indie czy Malezja - czyli powiązania geograficznie z wyżej wymienionymi gigantami.
@@ -91,7 +94,11 @@ W żółtym klastrze można zauważyć państwa Europy Środkowo-Wschodniej: Pol
 
 W pozostałych skupiskach, ogólny podział geograficzny nie jest aż tak zauważalny, natomiast często węzły krajów sąsiadujących są blisko siebie: Portugalia, Francja, Włochy, Norwegia, Rosja, Litwa, Estonia, Finlandia.
 
-### Sieć przepływów finansowych z podziałem na klastry
+![Fig.4](img/fig_4.png)
+
+*Fig. 4. Sieć przepływów finansowych z podziałem na klastry.*
+
+
 W poniższej macierzy przedstawiono podobieństwo Jaccarda pomiędzy klastrami z sieci przepływów finansowych (g1) i sieci organizacji międzynarodowych (g2). Klastry 0,1,2 i 3 z sieci g2 posiadają swój podobny odpowiednik w grupie klastrów z sieci g1. Klaster 4 z sieci g2 jest natomiast podobny do dwóch klastrów z sieci g1. W tabeli przedstawiono też wybrane państwa wspólne między najbardziej podobnymi klastrami z g1 i g2. Klastry 4 i 5 z sieci g1 nie mają podobnego odpowiednika w sieci g2.
 
 #### Macierz podobieństwa pomiędzy klastrami z różnych sieci
