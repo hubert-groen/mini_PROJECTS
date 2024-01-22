@@ -46,7 +46,7 @@ Sieć połączeń stworzona na podstawie tych danych będzie miała następując
 
 
 ## 2. PRZYGOTOWANIE DANYCH
-Po pobraniu danych wymagały one przygotowania, aby można było poddać je dalszej analizie. Wszystkie kroki można sprawdzić w pliku [dataset_processing.ipynb](link_do_pliku), który oryginalne pliki .csv przekształca w pliki gotowe do dalszych kroków poprzez następujące operacje:
+Po pobraniu danych wymagały one przygotowania, aby można było poddać je dalszej analizie. Wszystkie kroki można sprawdzić w [pliku](/DATA/dataset_processing.ipynb), który oryginalne pliki .csv przekształca w pliki gotowe do dalszych kroków poprzez następujące operacje:
 
 Po pobraniu danych konieczne było ich przygotowanie, aby umożliwić dalszą analizę. Wszystkie kroki tego procesu można przeanalizować w pliku "dataset_processing.ipynb". Poniżej przedstawiamy główne etapy przekształceń danych:
 
@@ -65,12 +65,21 @@ Po pobraniu danych konieczne było ich przygotowanie, aby umożliwić dalszą an
 5. **Przekształcenie zbioru danych organizacji:**
    Dane dotyczące przynależności do organizacji zostały przekształcone z postaci zerojedynkowej (fakt przynależności) w relację: państwo X państwo Y liczba wspólnych organizacji. To umożliwia stworzenie krawędzi ważonych wartością kolumny trzeciej pomiędzy poszczególnymi państwami (węzłami) - kolumny 1 i 2.
 
-Pliki csv z przygotowanymi do analizy danymi znajdują się [tutaj](link_do_plikow_csv).
+<br>
+
+Dane dot. przepływów finansowych przed przygotowaniem: [FINANSES_original](/DATA/FINANSES_original.csv)
+
+Dane dot. przepływów finansowych po przygotowaniu: [FINANSES_dataset](/DATA/FINANSES_dataset.csv)
+
+Dane dot. organizacji przed przygotowaniem: [ORGANIZATIONS_original](/DATA/ORGANIZATIONS_original.csv)
+
+Dane dot. organizacji po przygotowaniu: [ORGANIZATIONS_dataset](/DATA/ORGANIZATIONS_dataset.csv)
+
 
 
 ## 3. ANALIZA
 
-Funkcje, za pomocą których została przeprowadzona analiza, znajdują się w pliku [clustering.ipynb](link_do_pliku).
+Funkcje, za pomocą których została przeprowadzona analiza, znajdują się w [pliku](/DATA/clustering.ipynb).
 
 ### 3.1 KLASTROWANIE ALGOMERACYJNE
 
