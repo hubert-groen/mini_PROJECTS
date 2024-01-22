@@ -1,206 +1,199 @@
-# TECHNIKI ANALIZY SIECI SPOŁECZNYCH
+# SOCIAL NETWORK ANALYSIS TECHNIQUES
 
-## Temat projektu
+**[Polish version](README_PL.md)**
 
-Porównanie cech sieciowych państw-węzłów w sieci przepływów finansowych lub towarowych z analogicznymi cechami w sieci organizacji międzynarodowych lub bilateralnych umów handlowych.
+## Team
 
-## 1. KONCEPCJA
+This project was a collaborative work of:
 
-### Sieć Przepływów Finansowych
+- [Wojciech Gierulski](https://github.com/WojciechGierulski)
+- [Mariusz Zembron](https://github.com/mzembron)
+- [Hubert Groen](https://github.com/hubert-groen)
 
-Pierwszy zbiór danych został pobrany ze strony organizacji OECD (Organizacja Współpracy Gospodarczej i Rozwoju), która udostępnia szeroką gamę informacji o przepływach finansowych między państwami w wielu różnych kategoriach, m.in. bilanse płatnicze, międzynarodowe koszty transportu i ubezpieczenia w handlu towarami.
+## Project Topic
 
-Na potrzeby naszego projektu wybraliśmy dane o międzynarodowym handlu usługami. Zorganizowane są one w formie tabeli [państwo członkowskie, państwo], w której wartości oznaczają bilans płatniczy w handlu usługami. Formalnie wskaźnik ten nosi nazwę EBOPS (Extended Balance of Payments Services Classification) i jest powszechnie stosowany w statystyce ekonomicznej. Wartości wyrażone są w milionach USD.
+Comparison of network features between state-node networks in financial or commodity flow networks and analogous features in networks of international organizations or bilateral trade agreements.
 
-Warto zauważyć, że dane nie obejmują jedynie Państw przynależących do tej organizacji (państwa członkowskie), ale wszystkie z którymi utrzymują współpracę.
+## 1. CONCEPT
 
-Zbiór danych nie obejmuje wszystkich możliwych przepływów finansowych, np. przemysł lub eksport towarów, natomiast ich znaczną część (usługi), co niesie dużo informacji o współpracy pomiędzy poszczególnymi państwami. Z perspektywy uwzględnienia drugiego zbioru danych o organizacjach międzynarodowych, umożliwi to ciekawe porównanie, czy wspólna przynależność do organizacji pokrywa się w jakiś sposób z przepływami finansowymi.
+### Financial Flow Network
 
-Sieć połączeń stworzona na podstawie tych danych będzie miała następującą postać:
-- Węzłami są poszczególne państwa.
-- Krawędzie reprezentują wzajemny transfer finansowy (nie pomiędzy wszystkimi państwami, on występuje).
-- Waga krawędzi odpowiada liczbie przesyłanych środków (wartości będą odpowiednio znormalizowane).
+The first dataset was obtained from the OECD (Organization for Economic Cooperation and Development) website, which provides a wide range of information on financial flows between countries in various categories, including balance of payments, international costs of transport, and insurance in the trade of goods.
+
+For our project, we selected data on international trade in services. They are organized in the form of a table [member state, state], where values represent the balance of payments in trade in services. Formally, this indicator is called EBOPS (Extended Balance of Payments Services Classification) and is commonly used in economic statistics. The values are expressed in millions of USD.
+
+It is worth noting that the data include not only member states but all countries with which they cooperate.
+
+The dataset does not cover all possible financial flows, such as industry or goods exports, but a significant part of them (services), providing valuable information about cooperation between individual countries. Considering the second dataset on international organizations will allow for an interesting comparison to see if common membership in organizations aligns in any way with financial flows.
+
+The connection network created based on this data will have the following structure:
+- Nodes represent individual countries.
+- Edges represent mutual financial transfers (not present between all countries, as it depends).
+- Edge weight corresponds to the number of transferred funds (values will be appropriately normalized).
 
 ![Fig.1](img/fig_1.png)
 
-*Fig. 1. Przykładowe wiersze ze zbioru danych OECD.*
+*Fig. 1. Example rows from the OECD dataset.*
 
-### Sieć Organizacji Międzynarodowych
+### International Organizations Network
 
-Zbiory danych IGO zawierają informacje o organizacjach międzynarodowych, których członkami są co najmniej 3 państwa, z lat 1815-2014. Dane IGO są gromadzone w odstępach 5-letnich w latach 1815-1965, a następnie corocznie.
+IGO datasets contain information about international organizations whose members include at least 3 countries, from 1815 to 2014. IGO data is collected in 5-year intervals from 1815 to 1965, and then annually.
 
-Zbiór danych można pobrać jako jeden plik w formacie .csv ze strony Correlates of War. Dane są dostępne w formie tabelarycznej. Tabela w wierszach zawiera listę organizacji międzynarodowych, a w kolumnach listę państw. Wartości binarne 0/1 oznaczają brak przynależności/przynależność.
+The dataset can be downloaded as a single .csv file from the Correlates of War website. The data is available in tabular form. The table rows contain a list of international organizations, and the columns list of countries. Binary values 0/1 indicate non-membership/membership.
 
 ![Fig.2](img/fig_2.png)
 
-*Fig. 2. Przykładowe wiersze ze zbioru danych IGO.*
+*Fig. 2. Example rows from the IGO dataset.*
 
-Taki zbiór danych przedstawia, jak silnie państwa są ze sobą powiązane w kontekście przynależności do tych samych organizacji, co może lub nie pokrywać się z ilością przepływów finansowych.
+Such a dataset shows how strongly states are connected in terms of belonging to the same organizations, which may or may not align with the amount of financial flows.
 
-Dane pochodzą ze strony organizacji Correlates of War (studium działań wojennych). Mimo tematyki odchodzącej od ekonomii, organizacja udostępnia dane o przynależności do organizacji międzynarodowych, co również może być użyte w kontekście naszej analizy.
+The data comes from the Correlates of War organization (study of war actions). Despite the departure from economic themes, the organization provides data on membership in international organizations, which can also be used in the context of our analysis.
 
-Sieć połączeń stworzona na podstawie tych danych będzie miała następującą postać:
-- Węzłami są poszczególne państwa.
-- Węzły są ze sobą połączone, jeżeli należą do tej samej organizacji.
-- Waga krawędzi odpowiada liczbie wspólnych organizacji dla danej pary państw.
+The connection network created based on this data will have the following structure:
+- Nodes represent individual countries.
+- Nodes are connected if they belong to the same organization.
+- Edge weight corresponds to the number of common organizations for a given pair of countries.
 
 
-## 2. PRZYGOTOWANIE DANYCH
-Po pobraniu danych wymagały one przygotowania, aby można było poddać je dalszej analizie. Wszystkie kroki można sprawdzić w [pliku](/DATA/dataset_processing.ipynb), który oryginalne pliki .csv przekształca w pliki gotowe do dalszych kroków poprzez następujące operacje:
 
-Po pobraniu danych konieczne było ich przygotowanie, aby umożliwić dalszą analizę. Wszystkie kroki tego procesu można przeanalizować w pliku "dataset_processing.ipynb". Poniżej przedstawiamy główne etapy przekształceń danych:
+## 2. DATA PREPARATION
+After downloading the data, they required preparation for further analysis. All the steps can be checked in the [file](/DATA/dataset_processing.ipynb), which transforms the original .csv files into files ready for further steps through the following operations:
 
-1. **Filtrowanie kolumn:**
-   W zbiorze przepływów finansowych pozostawiono wyłącznie konieczne kolumny: państwo X państwo Y suma przepływów
+After downloading the data, it was necessary to prepare them for further analysis. All the steps of this process can be analyzed in the "dataset_processing.ipynb" file. Below are the main stages of data transformations:
 
-2. **Redukcja przepływów:**
-   Aby uprościć analizę, zdecydowano się na redukcję przepływów. Na przykład, jeśli Austria przesyłała do Belgii 200 mln $, a jednocześnie Belgia przesyłała do Austrii 100 mln $, zachowano tylko jedno połączenie "Austria-Belgia" o wartości 300 mln $.
+1. **Column Filtering:**
+   In the financial flows dataset, only necessary columns were retained: country X country Y sum of flows.
 
-3. **Ujednolicenie nazw państw:**
-   W celu spójności węzłów w obydwu sieciach przeprowadzono proces ujednolicenia nazw państw. Na przykład, "United States" zostało zamienione na "usa", a "SKorea" na "southkorea".
+2. **Flow Reduction:**
+   To simplify the analysis, a decision was made to reduce flows. For example, if Austria sent $200 million to Belgium, and at the same time, Belgium sent $100 million to Austria, only one "Austria-Belgium" connection with a value of $300 million was kept.
 
-4. **Usunięcie państw występujących tylko w jednym zbiorze:**
-   Wyeliminowano państwa, które występowały jedynie w jednym ze zbiorów danych. Przykładowo, zbiór przynależności do organizacji zawierał wiele państw, które już nie istnieją, takich jak Yugoslavia, USSR, West/East Germany.
+3. **Standardization of Country Names:**
+   To ensure consistency of nodes in both networks, a process of standardizing country names was carried out. For example, "United States" was changed to "usa," and "SKorea" to "southkorea."
 
-5. **Przekształcenie zbioru danych organizacji:**
-   Dane dotyczące przynależności do organizacji zostały przekształcone z postaci zerojedynkowej (fakt przynależności) w relację: państwo X państwo Y liczba wspólnych organizacji. To umożliwia stworzenie krawędzi ważonych wartością kolumny trzeciej pomiędzy poszczególnymi państwami (węzłami) - kolumny 1 i 2.
+4. **Removal of Countries Occurring Only in One Dataset:**
+   Countries that appeared only in one of the datasets were eliminated. For example, the dataset of organization membership included many countries that no longer exist, such as Yugoslavia, USSR, West/East Germany.
+
+5. **Transformation of Organization Dataset:**
+   Data on organization membership were transformed from a binary form (membership fact) into a relation: country X country Y number of common organizations. This allows the creation of weighted edges with the value of the third column between individual countries (nodes) - columns 1 and 2.
 
 <br>
 
-Dane dot. przepływów finansowych przed przygotowaniem: [FINANSES_original](/DATA/FINANSES_original.csv)
+Financial flow data before preparation: [FINANCES_original](/DATA/FINANCES_original.csv)
 
-Dane dot. przepływów finansowych po przygotowaniu: [FINANSES_dataset](/DATA/FINANSES_dataset.csv)
+Financial flow data after preparation: [FINANCES_dataset](/DATA/FINANCES_dataset.csv)
 
-Dane dot. organizacji przed przygotowaniem: [ORGANIZATIONS_original](/DATA/ORGANIZATIONS_original.csv)
+Organization data before preparation: [ORGANIZATIONS_original](/DATA/ORGANIZATIONS_original.csv)
 
-Dane dot. organizacji po przygotowaniu: [ORGANIZATIONS_dataset](/DATA/ORGANIZATIONS_dataset.csv)
+Organization data after preparation: [ORGANIZATIONS_dataset](/DATA/ORGANIZATIONS_dataset.csv)
 
 
 
-## 3. ANALIZA
 
-Funkcje, za pomocą których została przeprowadzona analiza, znajdują się w [pliku](/DATA/clustering.ipynb).
+## 3. ANALYSIS
 
-### 3.1 KLASTROWANIE ALGOMERACYJNE
+The functions used for the analysis are available in the [file](/DATA/clustering.ipynb).
 
-W zbiorze organizacji do tych samych klastrów należą głównie państwa z tych samych kontynentów - zwłaszcza w samych centrach skupisk. Na obrzeżach klastrów mogą znajdować się państwa-węzły z innych kontynentów, ale są one tak małe (z bardzo małą ilością przepływów), że można uznać to za szum (gdzieś musiały zostać dołączone).
+### 3.1 AGGLOMERATIVE CLUSTERING
 
-Przykładem może być Somalia, która została dołączona do skupiska Bliskiego Wschodu, mimo że geograficznie leży bardzo blisko (od Jemenu dzieli ją jedynie zatoka Adeńska). W kontekście rysowania grafu widać, że Somalia leży w prawym górnym rogu klastra, niejako "przyciągana" przez klaster afrykański znajdujący się dalej w tym kierunku.
+In the organization dataset, countries in the same clusters mainly belong to the same continents, especially in the central parts of the clusters. At the edges of the clusters, there may be node-countries from other continents, but they are so small (with very few flows) that it can be considered noise (they must have been attached somewhere).
 
-Warto zauważyć, że klastry oznaczone różnymi kolorami wykazują tendencję do gromadzenia państw z konkretnych regionów geograficznych, co ułatwia identyfikację geograficzną. Na przykład, szary klaster skupia państwa z Bliskiego Wschodu, czerwony głównie obejmuje państwa europejskie, zielony to państwa afrykańskie, a brązowy reprezentuje kraje Ameryki Południowej. Klaster pomarańczowy natomiast jest mieszanką państw z Ameryki Północnej, Azji i Oceanii.
+An example is Somalia, which has been attached to the Middle East cluster, even though it is geographically very close (only the Gulf of Aden separates it from Yemen). In the context of drawing the graph, Somalia is located in the upper right corner of the cluster, somewhat "attracted" by the African cluster further in that direction.
 
-Sieć organizacji jest grafem pełnym, ponieważ każdy kraj należy do przynajmniej jednej wspólnej organizacji z dowolnym innym krajem. Większość współprac to organizacje lokalne, począwszy od znanych Unia Europejska, Unia Afrykańska, Mercosur (Ameryka Południowa), po te mniejsze: Rada Nordycka, Beneluks, COPPPAL (Ameryka Łacińska).
+It is worth noting that clusters labeled with different colors tend to gather countries from specific geographical regions, facilitating geographical identification. For example, the gray cluster focuses on Middle Eastern countries, the red one mainly includes European countries, the green one represents African countries, and the brown one represents South American countries. The orange cluster is a mixture of countries from North America, Asia, and Oceania.
+
+The network of organizations is a complete graph because each country belongs to at least one common organization with any other country. Most collaborations are local organizations, starting from well-known ones like the European Union, African Union, Mercosur (South America), to smaller ones like the Nordic Council, Benelux, COPPPAL (Latin America).
 
 ![Fig.3](img/fig_3.png)
 
-*Fig. 3. Sieć organizacji międzynarodowych z podziałem na klastry.*
+*Fig. 3. International organizations network with clustering.*
 
-W zbiorze przepływów finansowych również widoczne są powiązania geograficzne, jednak są czasem "zdominowane" przez skalę wielkości finansów, co skutkuje obok siebie lądującymi gigantami, którzy niekoniecznie leżą na tym samym kontynencie.
+In the financial flows dataset, geographical connections are also visible but are sometimes "dominated" by the scale of financial values, resulting in giants landing next to each other, even if they are not on the same continent.
 
-Dobrym przykładem jest klaster fioletowy skupiający obok siebie: USA, Chiny, Japonię, Kanadę, Izrael, Koreę Północną czy Australię. Powiązania te są spowodowane stopniem rozwoju gospodarczego państw. Do tego klastra dołączają także Meksyk, Indonezja, Tajlandia, Indie czy Malezja - czyli powiązania geograficznie z wyżej wymienionymi gigantami.
+A good example is the purple cluster, bringing together the USA, China, Japan, Canada, Israel, North Korea, and Australia. These connections are due to the level of economic development of countries. To this cluster are also attached Mexico, Indonesia, Thailand, India, and Malaysia - countries geographically linked to the aforementioned giants.
 
-W żółtym klastrze można zauważyć państwa Europy Środkowo-Wschodniej: Polska, Niemcy, Austria, Słowacja, Słowenia, Ukraina, Białoruś. Kraje na obrzeżach klastra (Laos, Sierra Leone) można uznać za szum lub pojedyncze duże współprace pomiędzy akurat tymi państwami.
+In the yellow cluster, countries from Central and Eastern Europe can be observed: Poland, Germany, Austria, Slovakia, Slovenia, Ukraine, Belarus. Countries on the edges of the cluster (Laos, Sierra Leone) can be considered noise or single large collaborations between those particular countries.
 
-W pozostałych skupiskach, ogólny podział geograficzny nie jest aż tak zauważalny, natomiast często węzły krajów sąsiadujących są blisko siebie: Portugalia, Francja, Włochy, Norwegia, Rosja, Litwa, Estonia, Finlandia.
+In the remaining clusters, the overall geographical division is not as noticeable, but often neighboring country nodes are close to each other: Portugal, France, Italy, Norway, Russia, Lithuania, Estonia, Finland.
 
 ![Fig.4](img/fig_4.png)
 
-*Fig. 4. Sieć przepływów finansowych z podziałem na klastry.*
+*Fig. 4. Financial flows network with clustering.*
 
-
-W poniższej macierzy przedstawiono podobieństwo Jaccarda pomiędzy klastrami z sieci przepływów finansowych (g1) i sieci organizacji międzynarodowych (g2). Klastry 0,1,2 i 3 z sieci g2 posiadają swój podobny odpowiednik w grupie klastrów z sieci g1. Klaster 4 z sieci g2 jest natomiast podobny do dwóch klastrów z sieci g1. W tabeli przedstawiono też wybrane państwa wspólne między najbardziej podobnymi klastrami z g1 i g2. Klastry 4 i 5 z sieci g1 nie mają podobnego odpowiednika w sieci g2.
+The Jaccard similarity between clusters from the financial flows network (g1) and the international organizations network (g2) is presented in the matrix below. Clusters 0,1,2, and 3 from g2 have their similar counterparts in the cluster groups from g1. Cluster 4 from g2 is similar to two clusters from g1. The table also shows selected countries common between the most similar clusters from g1 and g2. Clusters 4 and 5 from g1 do not have a similar counterpart in g2.
 
 ![Fig.5](img/fig_5.png)
 
-*Fig. 5. Macierz podobieństwa pomiędzy klastrami z różnych sieci.*
+*Fig. 5. Similarity matrix between clusters from different networks.*
 
-- Podobieństwo klastrów 0-0: głównie państwa europejskie
-- Podobieństwo klastrów 1-1: głównie państwa afrykańskie
-- Podobieństwo klastrów 2-2: głównie państwa Ameryki Południowej i Środkowej
-- Podobieństwo klastrów 2-3: głównie państwa Azji
-- Podobieństwo klastrów 0-4: głównie państwa bliskiego wschodu
-- Podobieństwo klastrów 1-4: głównie państwa bliskiego wschodu
-
+- Similarity of clusters 0-0: mainly European countries
+- Similarity of clusters 1-1: mainly African countries
+- Similarity of clusters 2-2: mainly South and Central American countries
+- Similarity of clusters 2-3: mainly Asian countries
+- Similarity of clusters 0-4: mainly Middle Eastern countries
+- Similarity of clusters 1-4: mainly Middle Eastern countries
 
 |          | g1 cluster 0 | g1 cluster 1 | g1 cluster 2 | g1 cluster 2 | g1 cluster 0 | g1 cluster 1 |
 |----------|--------------|--------------|--------------|--------------|--------------|--------------|
-| **g2 cluster 0** | lithuania    | cameroon     | china        | costarica    | lebanon      | jordan       |
-| **g2 cluster 1** | moldova      | lesotho      | vietnam      | brazil       | somalia      | qatar        |
-| **g2 cluster 2** | turkey       | burundi      | malaysia     | mexico       | mauritania   | algeria      |
-| **g2 cluster 3** | northmacedonia| mozambique   | canada       | peru         | iraq         | kuwait       |
-| **g2 cluster 4** | azerbaijan   | ethiopia     | indonesia    | -            | -            | -            |
-| **g2 cluster 4** | dominicanrepublic| sudan      | comoros      | -            | -            | -            |
+| **g2 cluster 0** | Lithuania    | Cameroon     | China        | Costa Rica   | Lebanon      | Jordan       |
+| **g2 cluster 1** | Moldova      | Lesotho      | Vietnam      | Brazil       | Somalia      | Qatar        |
+| **g2 cluster 2** | Turkey       | Burundi      | Malaysia     | Mexico       | Mauritania   | Algeria      |
+| **g2 cluster 3** | North Macedonia| Mozambique   | Canada       | Peru         | Iraq         | Kuwait       |
+| **g2 cluster 4** | Azerbaijan   | Ethiopia     | Indonesia    | -            | -            | -            |
+| **g2 cluster 4** | Dominican Republic| Sudan      | Comoros      | -            | -            | -            |
 | ...      | ...          | ...          | ...          | ...          | ...          | ...          |
 
-Da się zauważyć nieprzypadkowe podobieństwo pomiędzy niektórymi klastrami, co może wskazywać na to, że przynależność do organizacji wpływa na przepływy finansowe.
+There is noticeable non-random similarity between some clusters, indicating that membership in organizations affects financial flows.
 
+# Does membership in organizations affect financial flows?
 
-
-# Czy przynależność do organizacji wpływa na przepływy finansowe?
-
-W poniższej macierzy przedstawiono średnie przepływy finansowe pomiędzy klastrami wyodrębnionymi na podstawie połączeń w organizacjach międzynarodowych. Średni przepływ pomiędzy klastrami X i Y jest zdefiniowany jako średnia arytmetyczna przepływów pomiędzy każdą możliwą unikalną parą państw (x, y), gdzie x jest państwem z klastra X, a y jest państwem z klastra Y. Cyfra 0 w macierzy oznacza brak danych. Dla klastrów 0 i 2 potwierdza się hipoteza, że państwa, które należą wspólnie do organizacji międzynarodowych mają pomiędzy sobą większy przepływ niż do innych państw. Dla klastrów 1,3 i 4, do których należą państwa Afryki, Azji wschodniej i Ameryki Południowej nie mieliśmy wystarczającej ilości danych, żeby zweryfikować lub wykluczyć hipotezę (przepływy wynoszą 0).
+The matrix below presents the average financial flows between clusters identified based on connections in international organizations. The average flow between clusters X and Y is defined as the arithmetic mean of flows between each possible unique pair of countries (x, y), where x is a country from cluster X, and y is a country from cluster Y. The 0 digit in the matrix indicates a lack of data. For clusters 0 and 2, the hypothesis that countries belonging jointly to international organizations have a higher flow between them than to other countries is confirmed. For clusters 1, 3, and 4, which include African, East Asian, and South American countries, we did not have enough data to verify or exclude the hypothesis (flows are 0).
 
 ![Fig.6](img/fig_6.png)
 
-*Fig. 6. Średnie przepływy finansowe pomiędzy państwami z różnych klastrów wyodrębnionych na podstawie sieci organizacji międzynarodowych.*
+*Fig. 6. Average financial flows between countries from different clusters identified based on the international organizations network.*
 
 
+# 3.2 CORE ANALYSIS
 
-|          | g1 cluster 0 | g1 cluster 1 | g1 cluster 2 | g1 cluster 2 | g1 cluster 0 | g1 cluster 1 |
-|----------|--------------|--------------|--------------|--------------|--------------|--------------|
-| **g2 cluster 0** | lithuania    | cameroon     | china        | costarica    | lebanon      | jordan       |
-| **g2 cluster 1** | moldova      | lesotho      | vietnam      | brazil       | somalia      | qatar        |
-| **g2 cluster 2** | turkey       | burundi      | malaysia     | mexico       | mauritania   | algeria      |
-| **g2 cluster 3** | northmacedonia| mozambique   | canada       | peru         | iraq         | kuwait       |
-| **g2 cluster 4** | azerbaijan   | ethiopia     | indonesia    | -            | -            | -            |
-| **g2 cluster 4** | dominicanrepublic| sudan      | comoros      | -            | -            | -            |
-| ...      | ...          | ...          | ...          | ...          | ...          | ...          |
+For the financial flows network, a core with the highest degree of 31 was identified. The majority of countries in this core are European countries and key global players such as the USA, Canada, China, and so on. An interesting outlier in this context is North Korea, which has 31 financial connections with other countries.
 
-Da się zauważyć nieprzypadkowe podobieństwo pomiędzy niektórymi klastrami, co może wskazywać na to, że przynależność do organizacji wpływa na przepływy finansowe.
+This observation is particularly intriguing due to the numerous sanctions imposed on North Korea. Even more interestingly, in the original organizational network, the node corresponding to North Korea also has a degree of 31. Korea has financial connections only with countries that are part of the highest-degree core.
 
-## 3.2 ANALIZA RDZENI
+In the case of the organizational network, the core analysis did not provide additional information since the network is a complete graph. Therefore, the network was examined after removing connections between countries participating in fewer than 50 organizations. The core with the highest degree (k = 37) looks as follows:
 
-Dla sieci przepływów finansowych wyznaczono rdzeń o najwyższym rzędzie, równym 31. Przeważająca część krajów wchodząca w jego skład to kraje europejskie oraz najważniejsze kraje świata: USA, Kanada, Chiny itp. Jedynym wyróżniającym się członkiem w tym zestawieniu jest Korea Północna, posiadająca 31 połączeń finansowych z innymi krajami tego zestawienia.
+All countries in the core have the same maximum degree of 37. Additionally, the presented subgraph is a clique, where each country is connected to every other country through membership in a certain organization. It is notable that the majority of countries in this network are African countries - so-called developing countries.
 
-Obserwacja ta jest niezmiernie ciekawa, głównie z powodu ilości sankcji jakimi jest objęty ten kraj. Co jeszcze bardziej interesujące, w pierwotnej sieci organizacji, węzeł odpowiadający Korei Północnej również jest stopnia 31 - Korea Posiada posiada połączenia finansowe jedynie z krajami wchodzącymi w skład rdzenia o najwyższym rzędzie.
+Analysis of the degree centrality of these countries in the original network indicates three leading countries: Tunisia (degree = 82), Egypt (degree = 80), and South Africa (degree = 79). This aligns with the fact that these countries are among the most developed in Africa. This conclusion is further supported by summing the financial flows of individual African countries. In this regard, Egypt ranks first ($6995.8 million USD), followed by South Africa ($6202.2 million USD), and Tunisia is fifth in this ranking ($3681.1 million USD).
 
-W przypadku sieci organizacji analiza rdzeni nie przynosiła dodatkowych informacji - sieć jest grafem pełnym. Z tego powodu zbadano sieć powstałą po usunięciu połączeń między krajami, które uczestniczą wspólnie w mniejszej ilości organizacji niż 50. Rdzeń o najwyższym rzędzie (k = 37) prezentuje się następująco:
+## 3.3 NUMERICAL INDICATORS
 
-Wszystkie kraje wchodzące w skład rdzenia są tego samego - maksymalnego stopnia, równego 37. Dodatkowo przedstawiony podgraf jest kliką, każdy kraj jest powiązany z innym, członkostwem w pewnej organizacji. Możemy zauważyć, że w skład zaprezentowanej sieci wchodzą w większości kraje afrykańskie - tzw. kraje rozwijające się.
+| INDICATOR                                          | FINANCIAL FLOWS | ORGANIZATIONS | ORGANIZATIONS (filter > 50)  |
+|---------------------------------------------------|-----------------|---------------|-----------------------------|
+| Transitivity (Global clustering coefficient)       | 0.35            | 1.0           | 0.69                        |
+| Average local clustering coefficient              | 0.89            | 1.0           | 0.77                        |
+| Density                                           | 0.195           | 1.0           | 0.24                        |
+| Assortativity (numeric_assortativity_coefficient) | -0.73           | nan           | 0.22                        |
 
-Analiza stopni wierzchołków przedstawionych krajów w oryginalnej sieci wskazuje trzy kraje - liderów: Tunezja (stopień = 82), Egipt (stopień=80), RPA (stopień=79). Pokrywa się to z faktem, że wskazane kraje są jednymi z najlepiej rozwiniętych w Afryce. Wniosek ten można również potwierdzić sumując przepływy finansowe poszczególnych krajów afrykańskich. Pod takim względem pierwszy jest Egipt (6995.8 mln USD), drugie RPA (6202.2 mln USD) a Tunezja zajmuje piąte miejsce w tym zestawieniu (3681.1 mln USD).
++ ### Global and average local clustering coefficients
 
+The values of these indicators in the organizational dataset are much higher because each country belongs to at least one common organization with another country - the transitivity is maximum. After removing connections smaller than 50, it naturally decreases a bit but remains at a high level. This suggests that countries already active in cooperation tend to maintain and develop ties by entering new collaborations. This phenomenon is known in network theory as preferential attachment to nodes with a higher node degree (in this case, higher collaboration activity).
 
-## 3.3 WSKAŹNIKI LICZBOWE
+In the context of financial flows, the edge density in the network is moderate, indicating many unconnected nodes. However, as weak connections, for example, with countries of small financial resources like Saint Kitts and Nevis or Antigua and Barbuda, which do not play a dominant role in the financial services sector, are eliminated, the transitivity value increases. This confirms that countries with low financial resources usually do not have many financial agreements and often rely on cooperation with individual dominant players, in this case, the USA.
 
-| WSKAŹNIK                                          | PRZEPŁYWY FINANSOWE | ORGANIZACJE | ORGANIZACJE (filtracja > 50)  |
-|---------------------------------------------------|---------------------|-------------|-------------------------------|
-| Przechodniość (Globalny współczynnik gronowania)  | 0.35                | 1.0         | 0.69                          |
-| Uśredniony lokalny współczynnik gronowania        | 0.89                | 1.0         | 0.77                          |
-| Gęstość                                           | 0.195               | 1.0         | 0.24                          |
-| Asortatywność (numeric_assortativity_coefficient) | -0.73               | nan         | 0.22                          |
+In summary, the analysis of the financial flows network does not show countries that have only a few but relatively large collaborations. Typically, if a country operates at high values, it simultaneously has many collaborations, suggesting strong connections with various partners.
 
-  
-+ ### Globalny oraz uśredniony lokalny współczynnik gronowania
++ ### Density
 
-Wartość tych wskaźników w zbiorze danych organizacji jest dużo wyższa, dlatego że każde państwo przynależy do przynajmniej jednej wspólnej organizacji z innym państwem - jest to przechodniość maksymalna. Po odrzuceniu powiązań mniejszych niż 50, naturalnie będzie ona trochę niższa, ale nadal na wysokim poziomie. Można z tego wnioskować, że państwa, które już są aktywne we współpracy, mają tendencję do utrzymywania i rozwijania więzi, wchodząc w nowe kolaboracje. To zjawisko jest znane w teorii sieci jako preferencyjne przyłączanie się do węzłów o większym stopniu węzła (w tym przypadku, większej aktywności współpracy).
+After removing edges in the organizational graph that indicate the co-membership of a pair of countries in fewer than 50 organizations, the graph density dropped to a level similar to the density in the financial flows graph. This means that applying this filter "brought together" both networks in terms of the number of connections between nodes. In both cases, connections between countries with high economic development and large sizes dominate. This can be interpreted as confirming the hypothesis that geography has a significant impact on international cooperation.
 
-W kontekście sieci przepływów finansowych, gęstość krawędzi w sieci jest umiarkowana, co oznacza, że istnieje wiele niepołączonych węzłów. Jednakże, w miarę eliminacji słabych powiązań, na przykład z państwami o niewielkich zasobach finansowych, takimi jak Saint Kitts i Nevis czy Antigua i Barbuda, które nie odgrywają dominującej roli w sektorze usług finansowych, wartość przechodniości rośnie. To potwierdza, że państwa o niskich zasobach finansowych zazwyczaj nie posiadają wielu umów finansowych i często polegają na współpracy z pojedynczymi dominującymi graczami, w tym przypadku, z USA.
++ ### Assortativity
 
-W skrócie, w analizie sieci przepływów finansowych nie występują państwa, które mają jedynie pojedyncze, ale relatywnie duże współprace. Zazwyczaj, jeśli państwo operuje na wysokich wartościach, to równocześnie posiada wiele współprac, co może sugerować, że istnieją silne powiązania z różnymi partnerami.
+The assortativity analysis for financial flows indicates disassortativity in this network. Countries with high degrees tend to form connections with countries with low degrees - significant countries often invest in poorer/developing countries. In the case of the organizational network, the assortativity coefficient is low, which may confirm the hypothesis that geography has a significant impact on international cooperation, more significant than, for example, the wealth of a country (African countries).
 
-+ ### Gęstość
+## 4. SUMMARY
 
-Po usunięciu krawędzi w grafie organizacji, świadczących o współwystępowaniu pary państw w poniżej 50 organizacjach, gęstość grafu spadła do poziomu zbliżonego do gęstości w grafie przepływów finansowych. Oznacza to, że nałożenie wspomnianego filtra “zbliżyło” obie sieci w sensie ilości połączeń między węzłami. W obydwu dominują połączenia między państwami o wysokim rozwoju gospodarczym i dużych rozmiarach. Można to interpretować jako potwierdzenie hipotezy, że geografia ma istotny wpływ na współpracę międzynarodową.
+The analysis of the financial flows network and the organizational network highlighted significant dependencies that correspond to the geographical location of individual countries. Both structures clearly reflect the influence of geography on the dynamics of international relations. International organizations often rely on geographical location (European Union, African Union). In the context of financial flows, there is a tendency for cooperation between neighboring countries. Still, this effect is clearly overshadowed by cooperation between economic giants. The analysis also sheds light on common features of both networks, indicating, for example, distinguished leaders on the African continent, who belong to many organizations and exchange a relatively large amount of finances with other countries.
 
-+ ### Asortatywność
-
-Analiza asortatywności w przypadku przepływów finansowych świadczy o dysasortatywności tej sieci. Kraje o wysokim stopniu mają tendencję do tworzenia połączeń z krajami o małym stopniu - znaczące kraje często inwestują w biedniejsze/rozwijające się państwa. W przypadku sieci organizacji, wskaźnik asortatywności jest niski, może to potwierdzać tezę, że geografia ma istotny wpływ na współpracę międzynarodową, bardziej znaczący niż np. zamożność państwa (kraje afrykańskie).
-
-## 4. PODSUMOWANIE
-
-Analiza sieci przepływów finansowych oraz sieci organizacji uwydatniła istotne zależności, które korespondują z położeniem geograficznym poszczególnych państw. Obie te struktury wyraźnie odzwierciedlają wpływ geografii na dynamikę relacji międzynarodowych. Organizacje międzynarodowe często opierają się o położenie geograficzne (Unia Europejska, Unia Afrykańska). W kontekście przepływów finansowych widoczna jest tendencja do współpracy między krajami leżącymi blisko siebie, jednak ten efekt jest wyraźnie przytłumiony przez współpracę między gigantami gospodarczymi. Analiza rzuca także światło na wspólne cechy obu sieci, wskazujące np. wyróżniających liderów na kontynencie afrykańskim, którzy należą do wielu organizacji oraz wymieniają relatywnie dużą ilość finansów z innymi państwami.
-
-Podsumowując, przeprowadzona analiza uwidoczniła pewne zależności między współwystępowaniem krajów w organizacjach międzynarodowych a przepływem pieniędzy. Niemniej jednak wpływ organizacji można by ocenić jeszcze lepiej w kontekście konkretnych zastosowań, np. podziału danych na organizacje dotyczące żywności i wyodrębnienie organizacji o tej samej gałęzi przemysłu.
+In conclusion, the conducted analysis revealed certain dependencies between the co-occurrence of countries in international organizations and the flow of money. However, the impact of organizations could be better assessed in the context of specific applications, such as dividing data into organizations related to food and extracting organizations in the same industry.
 
 
