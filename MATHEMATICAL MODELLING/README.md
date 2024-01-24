@@ -10,5 +10,12 @@ This project focuses on the analysis and modelling of flow networks, with a spec
 ### [PROJECT 2: Multicommodity Flow Network](Multicommodity%20Flow%20Network%20-%20PROJECT%202)
 In this project, we delve into the realm of multicommodity flow networks, examining their properties and applications. Visit the subfolder for more information, documentation, and code.
 
+### [PROJECT 3: Fuzzy Sets](Fuzzy%20Sets%20-%20PROJECT%203)
+In this project, I develop a production planning model using fuzzy sets, reference points, and an adaptive version of the Zimmerman method.
+
+1. **Fuzzy Sets:** Manage imprecise information with fuzzy logic for a nuanced representation.
+2. **Reference Points:** Establish benchmarks within the fuzzy set framework for clear decision-making.
+3. **Adaptive Zimmerman Method:** Dynamically adjust strategies based on changing conditions.
+
 ## 
 Each project has its own subfolder with detailed documentation, task formulation, implementation of linear programming models in AMPL, source code, and relevant files. Click on the project names above to navigate to the respective folders and explore the contents.
