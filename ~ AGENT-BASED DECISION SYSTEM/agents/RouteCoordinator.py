@@ -5,6 +5,13 @@ from queue import Queue
 import json
 
 
+OBSTACLES_LOCATIONS = []
+OBSTACLES_LOCATIONS += [[x, 5] for x in range(12)]
+OBSTACLES_LOCATIONS += [[x + 3, 10] for x in range(4)]
+OBSTACLES_LOCATIONS += [[16, x + 4] for x in range(3)]
+OBSTACLES_LOCATIONS += [[16, x + 10] for x in range(3)]
+
+
 class RouteCoordinator(Agent):
 
     class GetRouteRequest(CyclicBehaviour):
@@ -43,7 +50,15 @@ class RouteCoordinator(Agent):
             self.start_y = ambulance_location[1]
 
         def is_valid(self, x, y):
-            return 0 <= x < 20 and 0 <= y < 20
+            valid = True
+
+            if x < 0 or x > 20 or y < 0 or y > 20:
+                valid = False
+
+            if [x, y] in OBSTACLES_LOCATIONS:
+                valid = False
+
+            return valid
 
         def find_path(self, start, end):
             queue = Queue()

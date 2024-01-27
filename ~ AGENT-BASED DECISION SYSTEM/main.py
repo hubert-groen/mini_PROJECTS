@@ -13,6 +13,12 @@ async def main():
     emergency_center_agent = EmergencyCenter("emergency_center@localhost", "agent")
     await emergency_center_agent.start(auto_register=True)
 
+    route_coordinator_agent = RouteCoordinator("route_coordinator@localhost", "agent")
+    await route_coordinator_agent.start(auto_register=True)
+
+    traffic_light_coordinator = TrafficLightCoordinator("traffic_light_coordinator@localhost", "agent")
+    await traffic_light_coordinator.start(auto_register=True)
+
     ambulance_coordinator_agent = AmbulanceCoordinator("ambulance_coordinator@localhost", "agent")
     await ambulance_coordinator_agent.start(auto_register=True)
 
@@ -22,12 +28,10 @@ async def main():
     ambulance_2_agent = Ambulance("ambulance_2@localhost", "agent", 2, [11,11])
     await ambulance_2_agent.start(auto_register=True)
 
-    route_coordinator_agent = RouteCoordinator("route_coordinator@localhost", "agent")
-    await route_coordinator_agent.start(auto_register=True)
-
-    traffic_light_coordinator = TrafficLightCoordinator("traffic_light_coordinator@localhost", "agent")
-    await traffic_light_coordinator.start(auto_register=True)
+    ambulance_3_agent = Ambulance("ambulance_3@localhost", "agent", 3, [8,8])
+    await ambulance_3_agent.start(auto_register=True)
 
 
 if __name__ == "__main__":
     spade.run(main())
+
